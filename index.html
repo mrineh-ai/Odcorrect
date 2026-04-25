@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODCORRECT | Engineering Apparel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="no-scroll">
+
+    <!-- ══════════════════════════════
+         CINEMATIC INTRO
+    ══════════════════════════════ -->
+    <div id="intro-overlay">
+        <div class="intro-content">
+            <div class="intro-logo-wrap">
+                <img src="images/logo.png" alt="Logo" class="intro-logo">
+                <div class="intro-ring"></div>
+                <div class="intro-ring intro-ring-2"></div>
+            </div>
+            <h2 class="intro-tagline">UNLEARN WHAT'S RIGHT</h2>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         LOGIN MODAL
+    ══════════════════════════════ -->
+    <div id="login-backdrop" class="login-backdrop"></div>
+    <div id="login-modal" class="login-modal">
+
+        <button class="login-modal-close" id="login-close">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+
+        <!-- ANIMATED CHARACTER -->
+        <div class="login-character-wrap">
+            <svg id="login-character" viewBox="0 0 200 230" xmlns="http://www.w3.org/2000/svg">
+                <!-- Shadow -->
+                <ellipse cx="100" cy="218" rx="55" ry="10" fill="#1d1d1f" opacity="0.10"/>
+                <!-- Body / hoodie -->
+                <path d="M38 175 Q38 135 100 135 Q162 135 162 175 L167 230 L33 230 Z" fill="#1d1d1f"/>
+                <!-- Hoodie pocket -->
+                <path d="M80 195 Q100 190 120 195 L122 215 L78 215 Z" fill="#2a2a2a"/>
+                <!-- Collar -->
+                <path d="M78 137 Q100 152 122 137" fill="none" stroke="#333" stroke-width="3"/>
+                <!-- Neck -->
+                <rect x="88" y="122" width="24" height="20" rx="9" fill="#f6c9a8"/>
+                <!-- HEAD -->
+                <ellipse cx="100" cy="97" rx="54" ry="57" fill="#f6c9a8"/>
+                <!-- Ears -->
+                <ellipse cx="47" cy="99" rx="10" ry="13" fill="#f6c9a8"/>
+                <ellipse cx="153" cy="99" rx="10" ry="13" fill="#f6c9a8"/>
+                <ellipse cx="47" cy="99" rx="5.5" ry="7.5" fill="#f0b492"/>
+                <ellipse cx="153" cy="99" rx="5.5" ry="7.5" fill="#f0b492"/>
+                <!-- Hair -->
+                <ellipse cx="100" cy="47" rx="54" ry="24" fill="#1a1a1a"/>
+                <rect x="46" y="47" width="108" height="18" fill="#1a1a1a"/>
+                <!-- Hair side bits -->
+                <path d="M46 55 Q36 70 44 85" fill="none" stroke="#1a1a1a" stroke-width="8" stroke-linecap="round"/>
+                <path d="M154 55 Q164 70 156 85" fill="none" stroke="#1a1a1a" stroke-width="8" stroke-linecap="round"/>
+                <!-- Eyebrows -->
+                <path id="brow-left" d="M62 74 Q74 68 86 74" fill="none" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/>
+                <path id="brow-right" d="M114 74 Q126 68 138 74" fill="none" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/>
+                <!-- Eye whites -->
+                <ellipse cx="74" cy="91" rx="17" ry="16" fill="white"/>
+                <ellipse cx="126" cy="91" rx="17" ry="16" fill="white"/>
+                <!-- Eye border -->
+                <ellipse cx="74" cy="91" rx="17" ry="16" fill="none" stroke="#ecd6c3" stroke-width="1.5"/>
+                <ellipse cx="126" cy="91" rx="17" ry="16" fill="none" stroke="#ecd6c3" stroke-width="1.5"/>
+                <!-- Pupils — moved by JS -->
+                <circle id="pupil-left" cx="74" cy="91" r="7.5" fill="#1a1a1a"/>
+                <circle id="pupil-right" cx="126" cy="91" r="7.5" fill="#1a1a1a"/>
+                <!-- Iris accent -->
+                <circle id="iris-left" cx="74" cy="91" r="4" fill="#2d5a3d" opacity="0.6"/>
+                <circle id="iris-right" cx="126" cy="91" r="4" fill="#2d5a3d" opacity="0.6"/>
+                <!-- Shine -->
+                <circle id="shine-left" cx="78" cy="87" r="3" fill="white"/>
+                <circle id="shine-right" cx="130" cy="87" r="3" fill="white"/>
+                <!-- EYELIDS (animated by JS on password focus) -->
+                <ellipse id="lid-left" cx="74" cy="76" rx="17" ry="3" fill="#f6c9a8"/>
+                <ellipse id="lid-right" cx="126" cy="76" rx="17" ry="3" fill="#f6c9a8"/>
+                <!-- Lower lashes hint (always visible) -->
+                <path d="M57 105 Q74 108 91 105" fill="none" stroke="#ecd6c3" stroke-width="1"/>
+                <path d="M109 105 Q126 108 143 105" fill="none" stroke="#ecd6c3" stroke-width="1"/>
+                <!-- Nose -->
+                <path d="M96 103 Q100 112 104 103" fill="none" stroke="#e0a882" stroke-width="2" stroke-linecap="round"/>
+                <!-- Mouth -->
+                <path id="char-mouth" d="M84 120 Q100 131 116 120" fill="none" stroke="#c07050" stroke-width="2.5" stroke-linecap="round"/>
+                <!-- Cheek blush -->
+                <ellipse cx="57" cy="110" rx="11" ry="7" fill="#f4a0a0" opacity="0.35"/>
+                <ellipse cx="143" cy="110" rx="11" ry="7" fill="#f4a0a0" opacity="0.35"/>
+                <!-- Hoodie OD tag -->
+                <text x="100" y="186" text-anchor="middle" font-family="monospace" font-size="9" font-weight="900" fill="#00c96b" letter-spacing="3">OD</text>
+            </svg>
+
+            <!-- Speech bubble -->
+            <div class="char-bubble" id="char-bubble">
+                <span id="char-bubble-text">Hey! Welcome back 👋</span>
+            </div>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div class="login-form-wrap">
+            <p class="login-sys-tag">// IDENTITY_VERIFICATION</p>
+            <h2 class="login-title">SYSTEM LOGIN</h2>
+            <p class="login-sub">Access your drops &amp; order history</p>
+
+            <div class="login-field">
+                <label>EMAIL_ADDRESS</label>
+                <input type="email" id="login-email" placeholder="your@email.com" autocomplete="email">
+            </div>
+
+            <div class="login-field">
+                <label>PASSPHRASE</label>
+                <div class="pw-wrap">
+                    <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+                    <button type="button" class="pw-toggle" id="pw-toggle" aria-label="Show password">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="pw-eye-icon">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button class="login-btn win-effect" id="login-submit">
+                <span>AUTHENTICATE</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
+            </button>
+
+            <p class="login-foot">New here? <a href="#">Request Access →</a></p>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         HEADER / HERO
+    ══════════════════════════════ -->
+    <header class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-noise"></div>
+
+        <nav class="compact-nav">
+            <div class="nav-logo">
+                <img src="images/logo.png" alt="ODCORRECT Logo">
+                <span>ODCORRECT</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#collection">Collection</a></li>
+                <li><a href="#archive">Archive</a></li>
+                <li>
+                    <button class="login-trigger" id="open-login">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        LOGIN
+                    </button>
+                </li>
+                <li class="bag-icon">
+                    <a href="#">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                        </svg>
+                        <span class="bag-count">0</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- ── HERO HEADLINE ── -->
+        <div class="hero-content">
+            <div class="hero-headline-wrap reveal">
+                <p class="hero-eyebrow">ODCORRECT // RADHA COLLECTION</p>
+                <h1 class="hero-headline">
+                    <span class="hl-line">WEAR</span>
+                    <span class="hl-line hl-accent">THE</span>
+                    <span class="hl-line">FUTURE</span>
+                </h1>
+                <p class="hero-desc">Engineering Apparel for the SUPERCOOL Generation</p>
+            </div>
+
+            <div class="bento-grid reveal">
+                <div class="tile big-tile win-effect">
+                    <div class="tile-split left" onclick="filterCategory('men')">
+                        <div class="tile-inner">
+                            <span class="tile-label">FOR_HIM</span>
+                            <span class="tile-arrow">↗</span>
+                        </div>
+                        <div class="tile-overlay-text">MEN'S</div>
+                    </div>
+                    <div class="tile-split right" onclick="filterCategory('women')">
+                        <div class="tile-inner">
+                            <span class="tile-label">FOR_HER</span>
+                            <span class="tile-arrow">↗</span>
+                        </div>
+                        <div class="tile-overlay-text">WOMEN'S</div>
+                    </div>
+                </div>
+
+                <div class="small-tiles-container">
+                    <div class="tile small-tile win-effect" onclick="filterCategory('baby-boy')">
+                        <span class="tile-label">BABY_BOY</span>
+                        <span class="tile-arrow-sm">↗</span>
+                        <div class="tile-hover-bg"></div>
+                    </div>
+                    <div class="tile small-tile win-effect" onclick="filterCategory('baby-girl')">
+                        <span class="tile-label">BABY_GIRL</span>
+                        <span class="tile-arrow-sm">↗</span>
+                        <div class="tile-hover-bg"></div>
+                    </div>
+                    <div class="tile small-tile win-effect" onclick="filterCategory('her-footwear')">
+                        <span class="tile-label">HER_FOOTWEAR</span>
+                        <span class="tile-arrow-sm">↗</span>
+                        <div class="tile-hover-bg"></div>
+                    </div>
+                    <div class="tile small-tile win-effect" onclick="filterCategory('his-footwear')">
+                        <span class="tile-label">HIS_FOOTWEAR</span>
+                        <span class="tile-arrow-sm">↗</span>
+                        <div class="tile-hover-bg"></div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="primary-btn win-effect" onclick="document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
+                <span>EXPLORE ALL_DROP</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- PRODUCTS -->
+    <section id="collection" class="products">
+        <div class="section-header reveal">
+            <p class="section-tag">// LATEST_DROP</p>
+            <h2 class="section-title">The Collection</h2>
+        </div>
+        <div class="product-grid reveal"></div>
+    </section>
+
+    <!-- ══════════════════════════════
+         NEWSLETTER
+    ══════════════════════════════ -->
+    <section class="newsletter reveal">
+        <div class="newsletter-content">
+            <div class="nl-status-wrap">
+                <span class="nl-status-dot offline" id="nl-dot"></span>
+                <p class="status-code" id="nl-status">STATUS: SYSTEM_OFFLINE</p>
+            </div>
+            <h2>GAIN SYSTEM ACCESS</h2>
+            <p class="news-sub">Drop your email to receive early access, classified archives &amp; secret drops.</p>
+
+            <form class="access-form" id="access-form">
+                <input type="email" id="nl-email" placeholder="ENTER_EMAIL_ADDRESS" required>
+                <button type="submit" class="submit-btn win-effect" id="nl-submit">AUTHENTICATE</button>
+            </form>
+
+            <!-- SUCCESS STATE -->
+            <div class="nl-success" id="nl-success">
+                <div class="nl-success-ring">
+                    <svg class="nl-check" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00c96b" stroke-width="2.5" stroke-linecap="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                </div>
+                <p class="nl-success-text">ACCESS GRANTED</p>
+                <p class="nl-success-sub">SYSTEM_ONLINE // You're now in the network.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SIDE PANEL -->
+    <div id="panel-backdrop"></div>
+    <aside id="product-overlay" class="product-side-panel">
+        <div class="panel-close">
+            <button id="close-panel">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+                CLOSE
+            </button>
+        </div>
+        <div class="panel-content">
+            <div class="panel-image"><img id="overlay-img" src="" alt="Product Detail"></div>
+            <div class="panel-info">
+                <p class="spec-id">CORE_ID: OC_MN_2026</p>
+                <h2 id="overlay-title">PRODUCT_NAME</h2>
+                <p id="overlay-price" class="panel-price">$0.00</p>
+                <div class="size-selector">
+                    <button class="size-btn">S</button>
+                    <button class="size-btn active">M</button>
+                    <button class="size-btn">L</button>
+                    <button class="size-btn">XL</button>
+                </div>
+                <button class="primary-btn win-effect add-bag-btn">
+                    <span>ADD_TO_BAG</span>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 0 1-8 0"/>
+                    </svg>
+                </button>
+                <div class="technical-details">
+                    <h3>TECHNICAL_SPECIFICATIONS</h3>
+                    <ul>
+                        <li>HEAVYWEIGHT 450GSM COTTON</li>
+                        <li>OVERSIZED ARCHITECTURAL FIT</li>
+                        <li>REINFORCED DOUBLE-NEEDLE STITCHING</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <span>ODCORRECT</span>
+            <span class="footer-dot">·</span>
+            <span>© 2026</span>
+            <span class="footer-dot">·</span>
+            <span>Designed for the Unlearned.</span>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
