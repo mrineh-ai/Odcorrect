@@ -10,7 +10,12 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="no-scroll">
+
+    <!-- ══ CINEMATIC INTRO ══ -->
     <div id="intro-overlay">
+        <div class="intro-grain"></div>
+        <div class="intro-vignette"></div>
+        <div class="intro-projector"></div>
         <div class="intro-content">
             <div class="intro-logo-wrap">
                 <div class="intro-logo-text">OD</div>
@@ -25,6 +30,7 @@
         <div class="intro-scanline"></div>
     </div>
 
+    <!-- ══ PORTAL POPUP ══ -->
     <div id="portal-overlay" class="portal-overlay">
         <div class="portal-container">
             <div class="portal-ring-wrap">
@@ -35,16 +41,25 @@
                 <div class="portal-center">
                     <div class="portal-particles" id="portal-particles"></div>
                 </div>
+                <!-- Countdown ring with SVG progress -->
+                <div class="portal-countdown-wrap">
+                    <svg class="countdown-svg" viewBox="0 0 100 100">
+                        <circle class="countdown-track" cx="50" cy="50" r="42"/>
+                        <circle class="countdown-prog" id="countdown-arc" cx="50" cy="50" r="42"/>
+                    </svg>
+                    <span class="portal-timer" id="portal-timer">3</span>
+                </div>
             </div>
             <div class="portal-text-wrap">
                 <p class="portal-tag">// TEMPORAL_TRANSMISSION</p>
                 <h2 class="portal-headline">Travelling from<br><span class="portal-accent">The Future</span></h2>
-                <p class="portal-sub">Your cloth is folding through space-time...<br>Arrival estimated: <span class="portal-timer" id="portal-timer">3</span>s</p>
+                <p class="portal-sub">Your cloth is folding through space-time.<br>Warping timeline now.</p>
                 <button class="portal-close-btn" id="portal-close">CANCEL TIMELINE ✕</button>
             </div>
         </div>
     </div>
 
+    <!-- ══ LOGIN MODAL ══ -->
     <div id="login-backdrop" class="login-backdrop"></div>
     <div id="login-modal" class="login-modal">
         <button class="login-modal-close" id="login-close" aria-label="Close login">
@@ -54,13 +69,12 @@
         </button>
 
         <div class="login-character-wrap">
+            <div class="char-glow-anim"></div>
             <div class="char-scene">
-                <div id="login-character" class="boy-character mouse-happy" role="img" aria-label="Boy login mascot">
+                <div id="login-character" class="boy-character mouse-happy">
                     <div class="boy-shadow"></div>
                     <div class="boy-neck"></div>
-                    <div class="boy-body">
-                        <span>OD</span>
-                    </div>
+                    <div class="boy-body"><span>OD</span></div>
                     <div id="arms-normal" class="boy-arms arms-normal">
                         <div class="boy-arm boy-arm-left"></div>
                         <div class="boy-arm boy-arm-right"></div>
@@ -92,153 +106,17 @@
                         </div>
                     </div>
                 </div>
-                <div id="login-character" class="char-rig mouse-happy" role="img" aria-label="Premium original 3D animated bunny mascot">
-                    <div class="char-glow"></div>
-                    <div class="char-shadow"></div>
-                    <div class="ear ear-left"><span></span></div>
-                    <div class="ear ear-right"><span></span></div>
-                    <div class="body-3d">
-                        <div class="belly-3d"><span>OD</span></div>
-                    </div>
-                    <div id="arms-normal" class="arm-set arms-normal">
-                        <div class="arm arm-left"><span></span></div>
-                        <div class="arm arm-right"><span></span></div>
-                    </div>
-                    <div id="arms-cover" class="arm-set arms-cover">
-                        <div class="cover-paw cover-left"></div>
-                        <div class="cover-paw cover-right"></div>
-                    </div>
-                    <div class="head-3d">
-                        <div class="tuft-3d"></div>
-                        <div class="face-zone" id="face-zone">
-                            <div class="brow brow-left" id="brow-left"></div>
-                            <div class="brow brow-right" id="brow-right"></div>
-                            <div class="eye eye-left">
-                                <div class="lid" id="lid-left"></div>
-                                <div class="pupil" id="pupil-left"><i id="iris-left"></i><b id="shine-left"></b><em id="shine2-left"></em></div>
-                            </div>
-                            <div class="eye eye-right">
-                                <div class="lid" id="lid-right"></div>
-                                <div class="pupil" id="pupil-right"><i id="iris-right"></i><b id="shine-right"></b><em id="shine2-right"></em></div>
-                            </div>
-                            <div class="cheek cheek-left"></div>
-                            <div class="cheek cheek-right"></div>
-                            <div class="muzzle-3d">
-                                <div class="nose-3d"></div>
-                                <div class="mouth-3d" id="char-mouth"><span></span></div>
-                            </div>
-                            <div class="whisker-group whisker-left"><span></span><span></span><span></span></div>
-                            <div class="whisker-group whisker-right"><span></span><span></span><span></span></div>
-                            <div id="dizzy-stars" class="dizzy-stars"><span>*</span><span>*</span><span>*</span></div>
-                        </div>
-                    </div>
-                    <div class="feet-3d"><span></span><span></span></div>
-                </div>
-                <svg id="login-character" class="mouse-happy" viewBox="0 0 280 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Expressive 3D bunny mascot">
-                    <defs>
-                        <radialGradient id="furGrad" cx="32%" cy="22%" r="78%">
-                            <stop offset="0%" stop-color="#ffffff"/>
-                            <stop offset="42%" stop-color="#eef0f6"/>
-                            <stop offset="78%" stop-color="#c7ccd8"/>
-                            <stop offset="100%" stop-color="#abb2c2"/>
-                        </radialGradient>
-                        <radialGradient id="bellyGrad" cx="42%" cy="18%" r="78%">
-                            <stop offset="0%" stop-color="#ffffff"/>
-                            <stop offset="100%" stop-color="#e7e9f0"/>
-                        </radialGradient>
-                        <radialGradient id="earGrad" cx="42%" cy="35%" r="72%">
-                            <stop offset="0%" stop-color="#ffe2e8"/>
-                            <stop offset="100%" stop-color="#efa3b2"/>
-                        </radialGradient>
-                        <radialGradient id="eyeGrad" cx="34%" cy="25%" r="72%">
-                            <stop offset="0%" stop-color="#5d6580"/>
-                            <stop offset="54%" stop-color="#181927"/>
-                            <stop offset="100%" stop-color="#07070d"/>
-                        </radialGradient>
-                        <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
-                            <feDropShadow dx="0" dy="14" stdDeviation="10" flood-color="#1d1d1f" flood-opacity=".18"/>
-                        </filter>
-                        <filter id="tinyBlur">
-                            <feGaussianBlur stdDeviation=".55"/>
-                        </filter>
-                    </defs>
-
-                    <ellipse cx="140" cy="300" rx="72" ry="10" fill="#1d1d1f" opacity=".12"/>
-                    <circle class="mouse-tail" cx="81" cy="255" r="15" fill="#c5cad5"/>
-
-                    <g class="mouse-body" filter="url(#softShadow)">
-                        <ellipse cx="138" cy="226" rx="58" ry="66" fill="url(#furGrad)"/>
-                        <ellipse cx="144" cy="235" rx="31" ry="42" fill="url(#bellyGrad)" opacity=".92"/>
-                        <text x="144" y="231" text-anchor="middle" font-family="monospace" font-size="10" font-weight="900" fill="#00c96b" letter-spacing="3">OD</text>
-                    </g>
-
-                    <g id="arms-normal" class="mouse-arms mouse-arms-normal">
-                        <path d="M96 198 C79 217 83 241 107 239" fill="none" stroke="#cbd1dc" stroke-width="18" stroke-linecap="round"/>
-                        <ellipse cx="109" cy="238" rx="14" ry="11" fill="#d7dce6"/>
-                        <path d="M179 196 C195 216 189 241 166 239" fill="none" stroke="#cbd1dc" stroke-width="18" stroke-linecap="round"/>
-                        <ellipse cx="164" cy="238" rx="14" ry="11" fill="#d7dce6"/>
-                    </g>
-
-                    <g id="arms-cover" class="mouse-arms mouse-arms-cover">
-                        <path d="M96 202 C78 168 92 143 122 138" fill="none" stroke="#cbd1dc" stroke-width="19" stroke-linecap="round"/>
-                        <ellipse cx="116" cy="135" rx="24" ry="16" fill="#d8dde7" transform="rotate(-15 116 135)"/>
-                        <path d="M178 202 C196 168 181 143 151 138" fill="none" stroke="#cbd1dc" stroke-width="19" stroke-linecap="round"/>
-                        <ellipse cx="158" cy="135" rx="24" ry="16" fill="#d8dde7" transform="rotate(15 158 135)"/>
-                    </g>
-
-                    <g class="mouse-head" filter="url(#softShadow)">
-                        <ellipse class="bunny-ear-left" cx="79" cy="76" rx="25" ry="61" fill="url(#furGrad)" transform="rotate(68 79 76)"/>
-                        <ellipse class="bunny-ear-left-inner" cx="79" cy="78" rx="13" ry="47" fill="url(#earGrad)" opacity=".82" transform="rotate(68 79 78)"/>
-                        <ellipse class="bunny-ear-right" cx="175" cy="68" rx="25" ry="62" fill="url(#furGrad)" transform="rotate(-12 175 68)"/>
-                        <ellipse class="bunny-ear-right-inner" cx="175" cy="68" rx="13" ry="47" fill="url(#earGrad)" opacity=".82" transform="rotate(-12 175 68)"/>
-                        <ellipse cx="139" cy="139" rx="67" ry="61" fill="url(#furGrad)"/>
-                        <path d="M119 104 C128 92 149 91 159 104" fill="none" stroke="#d8dde8" stroke-width="6" stroke-linecap="round"/>
-                        <path class="hair-tuft" d="M129 84 C134 73 145 73 143 86 C151 78 161 84 153 94" fill="none" stroke="#c1c7d4" stroke-width="6" stroke-linecap="round"/>
-                        <ellipse cx="139" cy="156" rx="43" ry="31" fill="url(#bellyGrad)" opacity=".94"/>
-                    </g>
-
-                    <g class="face-zone" id="face-zone">
-                        <ellipse cx="113" cy="130" rx="19" ry="23" fill="#fff"/>
-                        <ellipse cx="162" cy="130" rx="19" ry="23" fill="#fff"/>
-                        <circle id="pupil-left" cx="113" cy="130" r="10" fill="url(#eyeGrad)"/>
-                        <circle id="pupil-right" cx="162" cy="130" r="10" fill="url(#eyeGrad)"/>
-                        <circle id="iris-left" cx="113" cy="130" r="5" fill="#455270" opacity=".45"/>
-                        <circle id="iris-right" cx="162" cy="130" r="5" fill="#455270" opacity=".45"/>
-                        <circle id="shine-left" cx="108" cy="123" r="5" fill="#fff"/>
-                        <circle id="shine-right" cx="157" cy="123" r="5" fill="#fff"/>
-                        <circle id="shine2-left" cx="119" cy="137" r="2" fill="#fff" opacity=".75"/>
-                        <circle id="shine2-right" cx="168" cy="137" r="2" fill="#fff" opacity=".75"/>
-                        <ellipse id="lid-left" cx="113" cy="110" rx="21" ry="3" fill="#e9edf5"/>
-                        <ellipse id="lid-right" cx="162" cy="110" rx="21" ry="3" fill="#e9edf5"/>
-                        <path id="brow-left" d="M96 107 Q113 97 130 106" fill="none" stroke="#505665" stroke-width="4.5" stroke-linecap="round"/>
-                        <path id="brow-right" d="M145 106 Q162 97 179 107" fill="none" stroke="#505665" stroke-width="4.5" stroke-linecap="round"/>
-                        <ellipse cx="137" cy="152" rx="12" ry="8" fill="#f08ca1"/>
-                        <ellipse cx="134" cy="149" rx="4" ry="2" fill="#fff" opacity=".55"/>
-                        <path id="char-mouth" d="M123 163 Q137 180 153 163" fill="none" stroke="#a55667" stroke-width="4" stroke-linecap="round"/>
-                        <path class="tongue" d="M136 171 Q143 176 149 169" fill="none" stroke="#ff8fa2" stroke-width="5" stroke-linecap="round"/>
-                        <ellipse class="cheek cheek-left" cx="96" cy="154" rx="15" ry="9" fill="#ff9fb0" opacity=".34" filter="url(#tinyBlur)"/>
-                        <ellipse class="cheek cheek-right" cx="181" cy="154" rx="15" ry="9" fill="#ff9fb0" opacity=".34" filter="url(#tinyBlur)"/>
-                        <path class="whiskers" d="M84 149 L48 141 M84 157 L47 159 M190 149 L226 141 M190 157 L227 159" fill="none" stroke="#a7adb9" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>
-                        <g id="dizzy-stars" class="dizzy-stars">
-                            <text x="79" y="86">✦</text>
-                            <text x="185" y="83">✦</text>
-                            <text x="138" y="66">✦</text>
-                        </g>
-                    </g>
-
-                    <g class="mouse-feet">
-                        <ellipse cx="105" cy="286" rx="24" ry="11" fill="#c4cad5"/>
-                        <ellipse cx="169" cy="286" rx="24" ry="11" fill="#c4cad5"/>
-                        <path d="M96 284 L96 291 M105 284 L105 292 M114 284 L114 291 M160 284 L160 291 M169 284 L169 292 M178 284 L178 291" stroke="#aab1bf" stroke-width="2" stroke-linecap="round" opacity=".6"/>
-                    </g>
-                </svg>
-
                 <div class="char-bounce-indicator">
                     <span></span><span></span><span></span>
                 </div>
             </div>
+
+            <!-- Speech bubble with typing dots -->
             <div class="char-bubble" id="char-bubble">
-                <span id="char-bubble-text">Hey! Welcome back</span>
+                <div class="bubble-typing" id="bubble-typing">
+                    <span></span><span></span><span></span>
+                </div>
+                <span id="char-bubble-text"></span>
             </div>
         </div>
 
@@ -270,14 +148,16 @@
                     <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
                 </svg>
             </button>
-
             <p class="login-foot">New here? <a href="#">Request Access →</a></p>
         </div>
     </div>
 
+    <!-- ══ HERO ══ -->
     <header class="hero">
         <div class="hero-bg"></div>
         <div class="hero-noise"></div>
+        <div class="hero-dot-grid"></div>
+
         <nav class="compact-nav">
             <div class="nav-logo">
                 <span class="nav-logo-text">OD</span>
@@ -292,14 +172,14 @@
         </nav>
 
         <div class="hero-content">
-            <div class="hero-headline-wrap reveal">
-                <p class="hero-eyebrow">ODCORRECT // RADHA COLLECTION</p>
+            <div class="hero-headline-wrap">
+                <p class="hero-eyebrow reveal-up" style="--d:0s">ODCORRECT // RADHA COLLECTION</p>
                 <h1 class="hero-headline">
-                    <span class="hl-line">WEAR</span>
-                    <span class="hl-line hl-accent">THE</span>
-                    <span class="hl-line">FUTURE</span>
+                    <span class="hl-line reveal-up" style="--d:.08s">WEAR</span>
+                    <span class="hl-line hl-accent reveal-up" style="--d:.18s">THE</span>
+                    <span class="hl-line reveal-up" style="--d:.28s">FUTURE</span>
                 </h1>
-                <p class="hero-desc">Engineering Apparel for the SUPERCOOL Generation</p>
+                <p class="hero-desc reveal-up" style="--d:.38s">Engineering Apparel for the SUPERCOOL Generation</p>
             </div>
 
             <div class="bento-grid reveal">
@@ -321,12 +201,13 @@
                 </div>
             </div>
 
-            <button class="primary-btn win-effect" onclick="document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
+            <button class="primary-btn win-effect reveal" onclick="document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
                 <span>EXPLORE ALL_DROP</span>
             </button>
         </div>
     </header>
 
+    <!-- ══ MARQUEE ══ -->
     <div class="marquee-wrap">
         <div class="marquee-track">
             <span>RADHA COLLECTION 2026</span><span class="marquee-dot">✦</span>
@@ -337,9 +218,14 @@
             <span>450GSM HEAVYWEIGHT</span><span class="marquee-dot">✦</span>
             <span>RADHA COLLECTION 2026</span><span class="marquee-dot">✦</span>
             <span>ENGINEERING APPAREL</span><span class="marquee-dot">✦</span>
+            <span>UNLEARN WHAT'S RIGHT</span><span class="marquee-dot">✦</span>
+            <span>WEAR THE FUTURE</span><span class="marquee-dot">✦</span>
+            <span>SUPERCOOL GENERATION</span><span class="marquee-dot">✦</span>
+            <span>450GSM HEAVYWEIGHT</span><span class="marquee-dot">✦</span>
         </div>
     </div>
 
+    <!-- ══ PRODUCTS ══ -->
     <section id="collection" class="products">
         <div class="section-header reveal">
             <p class="section-tag">// LATEST_DROP</p>
@@ -355,16 +241,31 @@
         <div class="product-grid reveal" id="product-grid"></div>
     </section>
 
+    <!-- ══ FEATURES STRIP — DARK INVERTED ══ -->
     <section class="features-strip reveal">
-        <div class="feature-item"><div class="feature-icon">⟲</div><div><p class="feature-title">FREE RETURNS</p><p class="feature-sub">30-day no questions asked</p></div></div>
+        <div class="features-watermark">OD</div>
+        <div class="feature-item">
+            <div class="feature-icon">⟲</div>
+            <div><p class="feature-title">FREE RETURNS</p><p class="feature-sub">30-day no questions asked</p></div>
+        </div>
         <div class="feature-divider"></div>
-        <div class="feature-item"><div class="feature-icon">◈</div><div><p class="feature-title">450GSM HEAVYWEIGHT</p><p class="feature-sub">Engineered for longevity</p></div></div>
+        <div class="feature-item">
+            <div class="feature-icon">◈</div>
+            <div><p class="feature-title">450GSM HEAVYWEIGHT</p><p class="feature-sub">Engineered for longevity</p></div>
+        </div>
         <div class="feature-divider"></div>
-        <div class="feature-item"><div class="feature-icon">⬡</div><div><p class="feature-title">FUTURE-PROOF DESIGN</p><p class="feature-sub">Timeless, not trendy</p></div></div>
+        <div class="feature-item">
+            <div class="feature-icon">⬡</div>
+            <div><p class="feature-title">FUTURE-PROOF DESIGN</p><p class="feature-sub">Timeless, not trendy</p></div>
+        </div>
         <div class="feature-divider"></div>
-        <div class="feature-item"><div class="feature-icon">✦</div><div><p class="feature-title">LIMITED DROPS</p><p class="feature-sub">No restocks. Ever.</p></div></div>
+        <div class="feature-item">
+            <div class="feature-icon">✦</div>
+            <div><p class="feature-title">LIMITED DROPS</p><p class="feature-sub">No restocks. Ever.</p></div>
+        </div>
     </section>
 
+    <!-- ══ NEWSLETTER ══ -->
     <section class="newsletter reveal">
         <div class="newsletter-content">
             <div class="nl-status-wrap">
@@ -385,6 +286,7 @@
         </div>
     </section>
 
+    <!-- ══ SIDE PANEL ══ -->
     <div id="panel-backdrop"></div>
     <aside id="product-overlay" class="product-side-panel">
         <div class="panel-close"><button id="close-panel">CLOSE</button></div>
@@ -394,7 +296,7 @@
                 <p class="spec-id" id="overlay-spec">CORE_ID: OC_MN_2026</p>
                 <h2 id="overlay-title">PRODUCT_NAME</h2>
                 <p id="overlay-price" class="panel-price">₹0</p>
-                <p id="overlay-desc" class="panel-desc">Premium engineering-grade apparel for those who dare to unlearn.</p>
+                <p id="overlay-desc" class="panel-desc">Premium engineering-grade apparel.</p>
                 <div class="size-selector">
                     <button class="size-btn">S</button>
                     <button class="size-btn active">M</button>
@@ -415,15 +317,28 @@
         </div>
     </aside>
 
+    <!-- ══ FOOTER ══ -->
     <footer class="footer" id="archive">
+        <div class="footer-watermark">ODCORRECT</div>
         <div class="footer-top">
-            <div class="footer-brand"><span class="footer-logo-text">OD</span><p class="footer-tagline">UNLEARN WHAT'S RIGHT</p></div>
+            <div class="footer-brand">
+                <span class="footer-logo-text">OD</span>
+                <p class="footer-tagline">UNLEARN WHAT'S RIGHT</p>
+            </div>
             <div class="footer-links-grid">
-                <div class="footer-col"><p class="footer-col-title">COLLECTION</p><a href="#">Men's Drop</a><a href="#">Women's Drop</a><a href="#">Baby Collection</a><a href="#">Footwear</a></div>
-                <div class="footer-col"><p class="footer-col-title">SYSTEM</p><a href="#">Archive</a><a href="#">About</a><a href="#">Contact</a><a href="#">Careers</a></div>
-                <div class="footer-col"><p class="footer-col-title">SUPPORT</p><a href="#">Size Guide</a><a href="#">Returns</a><a href="#">Shipping</a><a href="#">FAQ</a></div>
-        
-    </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">COLLECTION</p>
+                    <a href="#">Men's Drop</a><a href="#">Women's Drop</a><a href="#">Baby Collection</a><a href="#">Footwear</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">SYSTEM</p>
+                    <a href="#">Archive</a><a href="#">About</a><a href="#">Contact</a><a href="#">Careers</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">SUPPORT</p>
+                    <a href="#">Size Guide</a><a href="#">Returns</a><a href="#">Shipping</a><a href="#">FAQ</a>
+                </div>
+            </div>
         </div>
         <div class="footer-bottom">
             <span class="footer-copy">© 2026 ODCORRECT</span>
