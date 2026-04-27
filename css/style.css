@@ -799,7 +799,7 @@ body.home nav.compact-nav .nav-logo-img {
 
 @media (max-width:600px) {
     body.home nav.compact-nav .nav-logo-img {
-        height: 42px !important;
+        height: 52px !important;
     }
 }
 .compact-nav {
