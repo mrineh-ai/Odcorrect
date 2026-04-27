@@ -42,50 +42,14 @@
         <div class="login-character-wrap">
             <div class="char-glow-anim"></div>
             <div class="char-scene">
-                <div id="login-character" class="boy-character mouse-happy">
-                    <div class="boy-shadow"></div>
-                    <div class="boy-neck"></div>
-                    <div class="boy-body"><span>OD</span></div>
-                    <div id="arms-normal" class="boy-arms arms-normal">
-                        <div class="boy-arm boy-arm-left"></div>
-                        <div class="boy-arm boy-arm-right"></div>
-                    </div>
-                    <div id="arms-cover" class="boy-arms arms-cover">
-                        <div class="boy-cover-arm cover-left"></div>
-                        <div class="boy-cover-arm cover-right"></div>
-                    </div>
-                    <div class="boy-head">
-                        <div class="boy-ear boy-ear-left"></div>
-                        <div class="boy-ear boy-ear-right"></div>
-                        <div class="boy-hair hair-back"></div>
-                        <div class="boy-hair hair-front"></div>
-                        <div class="boy-face" id="face-zone">
-                            <div class="boy-brow brow-left" id="brow-left"></div>
-                            <div class="boy-brow brow-right" id="brow-right"></div>
-                            <div class="boy-eye eye-left">
-                                <div class="boy-lid" id="lid-left"></div>
-                                <div class="boy-pupil" id="pupil-left"></div>
-                            </div>
-                            <div class="boy-eye eye-right">
-                                <div class="boy-lid" id="lid-right"></div>
-                                <div class="boy-pupil" id="pupil-right"></div>
-                            </div>
-                            <div class="boy-cheek cheek-left"></div>
-                            <div class="boy-cheek cheek-right"></div>
-                            <div class="boy-nose"></div>
-                            <div class="boy-mouth" id="char-mouth"></div>
-                        </div>
-                    </div>
-                </div>
+                <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.88/build/spline-viewer.js"></script>
+                <spline-viewer url="https://prod.spline.design/Br2RZcp0Wvu5i5Ic/scene.splinecode" class="spline-robot"></spline-viewer>
                 <div class="char-bounce-indicator">
                     <span></span><span></span><span></span>
                 </div>
             </div>
             <div class="char-bubble" id="char-bubble">
-                <div class="bubble-typing" id="bubble-typing">
-                    <span></span><span></span><span></span>
-                </div>
-                <span id="char-bubble-text"></span>
+                <span id="char-bubble-text">Ready to authenticate...</span>
             </div>
         </div>
 
@@ -140,13 +104,14 @@
         <div class="hero-content">
             <div class="hero-headline-wrap">
                 <p class="hero-eyebrow reveal-up" style="--d:0s">ODCORRECT — RADHA COLLECTION</p>
-                <h1 class="hero-headline">
-                    <span class="hl-line reveal-up" style="--d:.08s">WEAR</span>
-                    <span class="hl-line hl-accent reveal-up" style="--d:.18s">THE</span>
-                    <span class="hl-line reveal-up" style="--d:.28s">FUTURE</span>
-                </h1>
-                <p class="hero-desc reveal-up" style="--d:.38s">Engineering Apparel for the SUPERCOOL Generation</p>
             </div>
+
+            <!-- FULLSCREEN SPLINE HERO SECTION -->
+            <div class="hero-spline-container reveal">
+                <spline-viewer url="https://prod.spline.design/KvQoR4PHa9kFsJEJ/scene.splinecode" class="hero-spline-full"></spline-viewer>
+            </div>
+
+            <p class="hero-desc reveal-up" style="--d:.38s">Engineering Apparel for the SUPERCOOL Generation</p>
 
             <div class="bento-grid reveal">
                 <div class="tile big-tile win-effect">
@@ -191,7 +156,6 @@
                 </div>
             </div>
 
-            <!-- FIX: Explore button is now OUTSIDE the bento-grid -->
             <div class="cta-wrap reveal">
                 <button class="primary-btn win-effect" onclick="document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
                     <span>Explore Collection</span>
@@ -342,6 +306,7 @@
         </div>
     </footer>
 
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.88/build/spline-viewer.js"></script>
     <script src="js/script.js"></script>
 </body>
 </html>

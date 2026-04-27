@@ -1,5 +1,6 @@
 // ══════════════════════════════════════════════
-//  ODCORRECT MASTER ENGINE  v4
+//  ODCORRECT MASTER ENGINE  v4 (Updated)
+//  [Optimized for Spline Robot Integration]
 // ══════════════════════════════════════════════
 
 // ─── PRODUCT DATA ─────────────────────────────
@@ -23,23 +24,12 @@ const CAT_LABELS = { men:"M", women:"W", baby:"B", footwear:"F" };
 
 let portalTimerInterval = null;
 let bagCount = 0;
-let eyesClosed = false;
 let pwVisible = false;
 let bubbleTimer = null;
-let bubbleReady = false;
 
 // ─── DOM REFS ─────────────────────────────────
-const character  = document.querySelector(".boy-character");
-const pupilL     = document.getElementById("pupil-left");
-const pupilR     = document.getElementById("pupil-right");
-const lidL       = document.getElementById("lid-left");
-const lidR       = document.getElementById("lid-right");
-const browL      = document.getElementById("brow-left");
-const browR      = document.getElementById("brow-right");
-const mouth      = document.getElementById("char-mouth");
 const bubble     = document.getElementById("char-bubble");
 const bubbleTxt  = document.getElementById("char-bubble-text");
-const bubbleTyping = document.getElementById("bubble-typing");
 const pwInput    = document.getElementById("login-password");
 const emailInput = document.getElementById("login-email");
 
@@ -71,7 +61,6 @@ document.addEventListener("mousemove", e => {
         const y = (e.clientY / window.innerHeight) * 100;
         bg.style.background = `radial-gradient(ellipse 80% 60% at ${x}% ${y}%, rgba(0,201,107,.09) 0%, transparent 70%)`;
     }
-    movePupils(e);
 });
 
 // ─── 4. CINEMATIC INTRO ──────────────────────
@@ -99,7 +88,6 @@ function spawnIntroParticles() {
 window.addEventListener("DOMContentLoaded", () => {
     const intro = document.getElementById("intro-overlay");
     document.body.classList.add("no-scroll");
-    // Hero text starts hidden until intro ends
     document.querySelectorAll(".reveal-up").forEach(el => {
         el.style.animationPlayState = "paused";
     });
@@ -113,7 +101,6 @@ window.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         intro?.classList.add("intro-hidden");
         document.body.classList.remove("no-scroll");
-        // Trigger staggered headline reveal
         document.querySelectorAll(".reveal-up").forEach(el => {
             el.style.animationPlayState = "running";
         });
@@ -121,7 +108,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }, 3800);
 });
 
-// ─── 5. NAV BEHAVIOR (SHADOW + HIDE/SHOW) ───────────────────────────
+// ─── 5. NAV BEHAVIOR ─────────────────────────
 let lastScroll = 0;
 
 window.addEventListener("scroll", () => {
@@ -130,29 +117,25 @@ window.addEventListener("scroll", () => {
 
     const currentScroll = window.scrollY;
 
-    // Shadow effect (your existing logic)
     nav.style.boxShadow = currentScroll > 40
         ? "0 8px 40px rgba(0,0,0,.13), 0 1px 0 rgba(255,255,255,.9) inset"
         : "0 4px 24px rgba(0,0,0,.08), 0 1px 0 rgba(255,255,255,.9) inset";
 
-    // Always show at top
     if (currentScroll <= 0) {
         nav.classList.remove("nav-hidden");
         return;
     }
 
-    // Hide on scroll down
     if (currentScroll > lastScroll && currentScroll > 80) {
         nav.classList.add("nav-hidden");
     } else {
-        // Show on scroll up
         nav.classList.remove("nav-hidden");
     }
 
     lastScroll = currentScroll;
 }, { passive: true });
 
-// ─── 6. PORTAL — DR STRANGE ──────────────────
+// ─── 6. PORTAL ──────────────────────────────
 function initPortalParticles() {
     const c = document.getElementById("portal-particles");
     if (!c) return;
@@ -189,12 +172,11 @@ function openPortal(cat) {
 
     const total = 3;
     let count = total;
-    const circumference = 2 * Math.PI * 42; // r=42
+    const circumference = 2 * Math.PI * 42;
     if (timerEl) timerEl.textContent = count;
     if (arc) {
         arc.style.transition = "none";
         arc.style.strokeDashoffset = 0;
-        // Force reflow then start animating
         arc.getBoundingClientRect();
         arc.style.transition = `stroke-dashoffset ${total}s linear`;
         arc.style.strokeDashoffset = circumference;
@@ -329,19 +311,17 @@ document.querySelector(".add-bag-btn")?.addEventListener("click", () => {
     closePanel();
 });
 
-// ─── 10. LOGIN ───────────────────────────────
+// ──��� 10. LOGIN ──────────────────────────────
 function openLogin() {
     document.getElementById("login-modal")?.classList.add("active");
     document.getElementById("login-backdrop")?.classList.add("active");
     document.body.classList.add("no-scroll");
-    setMood("happy");
     showBubble("Hey! Welcome back 👋");
 }
 function closeLogin() {
     document.getElementById("login-modal")?.classList.remove("active");
     document.getElementById("login-backdrop")?.classList.remove("active");
     document.body.classList.remove("no-scroll");
-    setMood("happy");
 }
 document.getElementById("open-login")?.addEventListener("click", openLogin);
 document.getElementById("login-close")?.addEventListener("click", closeLogin);
@@ -351,98 +331,31 @@ document.addEventListener("keydown", e => {
     if (e.key === "Escape") { closePanel(); closePortal(); closeLogin(); }
 });
 
-// ─── 11. CHARACTER EYE TRACKING ───────────────
-function movePupils(e) {
-    if (eyesClosed || !character) return;
-    const rect  = character.getBoundingClientRect();
-    const cx    = rect.left + rect.width * .5;
-    const cy    = rect.top  + rect.height * .44;
-    const dx    = e.clientX - cx;
-    const dy    = e.clientY - cy;
-    const dist  = Math.hypot(dx, dy) || 1;
-    const norm  = Math.min(dist, 190) / 190;
-    const ox    = (dx / dist) * norm * 6;
-    const oy    = (dy / dist) * norm * 5;
-    if (pupilL) pupilL.style.transform = `translate(${ox}px,${oy}px)`;
-    if (pupilR) pupilR.style.transform = `translate(${ox}px,${oy}px)`;
-}
-
-function eyesOpen() {
-    eyesClosed = false;
-    character?.style.setProperty("--lid-scale","0");
-    if (pupilL) pupilL.style.transform = "";
-    if (pupilR) pupilR.style.transform = "";
-}
-function eyesClose() {
-    eyesClosed = true;
-    character?.style.setProperty("--lid-scale","1");
-    if (pupilL) pupilL.style.transform = "translate(0,0)";
-    if (pupilR) pupilR.style.transform = "translate(0,0)";
-}
-
-function setBrows(type) {
-    if (!browL || !browR) return;
-    if (type === "shy") {
-        browL.style.transform = "translateY(-5px) rotate(-5deg)";
-        browR.style.transform = "translateY(-5px) rotate(5deg)";
-    } else if (type === "surprised") {
-        browL.style.transform = "translateY(-8px) rotate(-2deg)";
-        browR.style.transform = "translateY(-8px) rotate(2deg)";
-    } else {
-        browL.style.transform = "rotate(-8deg)";
-        browR.style.transform = "rotate(8deg)";
-    }
-}
-function setMouth(type) {
-    if (!mouth) return;
-    if (type === "shy")       { mouth.style.height = "4px";  mouth.style.borderRadius = "0";         mouth.style.transform = "none"; }
-    else if (type === "big")  { mouth.style.height = "14px"; mouth.style.borderRadius = "0 0 22px 22px"; mouth.style.transform = "none"; }
-    else                      { mouth.style.height = "10px"; mouth.style.borderRadius = "0 0 22px 22px"; mouth.style.transform = "none"; }
-}
-
-function setMood(mood) {
-    if (!character) return;
-    character.classList.remove("mouse-happy","mouse-shy");
-    character.classList.add(`mouse-${mood}`);
-    if (mood === "shy") { eyesClose(); setBrows("shy"); setMouth("shy"); }
-    else                { eyesOpen();  setBrows("happy"); setMouth("happy"); }
-}
-
-// ─── 12. SPEECH BUBBLE — TYPING ANIMATION ────
+// ─── 11. SPEECH BUBBLE ──────────────────────
 function showBubble(text, delay = 0) {
-    if (!bubble || !bubbleTxt || !bubbleTyping) return;
+    if (!bubble || !bubbleTxt) return;
     clearTimeout(bubbleTimer);
 
-    // Fade out first
     bubble.style.opacity = "0";
     bubble.style.transform = "scale(.92) translateY(5px)";
 
     bubbleTimer = setTimeout(() => {
-        // Show typing dots
-        bubbleTyping.style.display = "flex";
-        bubbleTxt.style.display = "none";
+        bubbleTxt.textContent = text;
+        bubbleTxt.style.display = "inline";
         bubble.style.opacity = "1";
         bubble.style.transform = "scale(1) translateY(0)";
         bubble.style.transition = "opacity .25s, transform .25s";
-
-        // After typing simulation, reveal text
-        setTimeout(() => {
-            bubbleTyping.style.display = "none";
-            bubbleTxt.style.display = "inline";
-            bubbleTxt.textContent = text;
-        }, 700);
     }, delay + 160);
 }
 
-// ─── 13. INPUT INTERACTIONS ──────────────────
+// ─── 12. INPUT INTERACTIONS ─────────────────
 pwInput?.addEventListener("focus", () => {
-    if (!pwVisible) { setMood("shy"); showBubble("I won't look. 🙈"); }
+    showBubble("I won't look. 🙈");
 });
 pwInput?.addEventListener("blur", () => {
-    if (!pwVisible) { setMood("happy"); showBubble("All good! 👍"); }
+    showBubble("All good! 👍");
 });
 emailInput?.addEventListener("focus", () => {
-    setMood("happy");
     showBubble("Enter your email ✉️");
 });
 emailInput?.addEventListener("blur", () => showBubble("Now the secret part... 🔐"));
@@ -456,16 +369,15 @@ document.getElementById("pw-toggle")?.addEventListener("click", () => {
             ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`
             : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
     }
-    if (pwVisible) { setMood("happy"); showBubble("I can see it now 👀"); }
-    else           { setMood("shy");   showBubble("Back to not looking 🙈"); }
+    if (pwVisible) { showBubble("I can see it now 👀"); }
+    else           { showBubble("Back to not looking 🙈"); }
 });
 
-// ─── 14. LOGIN SUBMIT ────────────────────────
+// ─── 13. LOGIN SUBMIT ────────────────────────
 document.getElementById("login-submit")?.addEventListener("click", () => {
     const email = emailInput?.value;
     const pass  = pwInput?.value;
     if (!email || !pass) { showBubble("Fill both fields first! 😅"); return; }
-    setMood("happy");
     showBubble("Authenticating... 🔐");
     setTimeout(() => {
         showBubble("✅ Access granted! Welcome.");
@@ -473,7 +385,7 @@ document.getElementById("login-submit")?.addEventListener("click", () => {
     }, 900);
 });
 
-// ─── 15. NEWSLETTER ──────────────────────────
+// ─── 14. NEWSLETTER ────────────────────────
 const accessForm = document.getElementById("access-form");
 const nlDot      = document.getElementById("nl-dot");
 const nlStatus   = document.getElementById("nl-status");
