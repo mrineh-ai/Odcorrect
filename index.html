@@ -18,7 +18,8 @@
         <div class="intro-projector"></div>
         <div class="intro-content">
             <div class="intro-logo-wrap">
-                <div class="intro-logo-text">OD</div>
+                <!-- CHANGED: logo2.png in intro -->
+                <img src="images/logo2.png" class="intro-logo-img" alt="ODCORRECT">
                 <div class="intro-ring"></div>
                 <div class="intro-ring intro-ring-2"></div>
                 <div class="intro-ring intro-ring-3"></div>
@@ -41,7 +42,6 @@
                 <div class="portal-center">
                     <div class="portal-particles" id="portal-particles"></div>
                 </div>
-                <!-- Countdown ring with SVG progress -->
                 <div class="portal-countdown-wrap">
                     <svg class="countdown-svg" viewBox="0 0 100 100">
                         <circle class="countdown-track" cx="50" cy="50" r="42"/>
@@ -51,7 +51,7 @@
                 </div>
             </div>
             <div class="portal-text-wrap">
-                <p class="portal-tag">// TEMPORAL_TRANSMISSION</p>
+                <p class="portal-tag">TEMPORAL TRANSMISSION</p>
                 <h2 class="portal-headline">Travelling from<br><span class="portal-accent">The Future</span></h2>
                 <p class="portal-sub">Your cloth is folding through space-time.<br>Warping timeline now.</p>
                 <button class="portal-close-btn" id="portal-close">CANCEL TIMELINE ✕</button>
@@ -110,8 +110,6 @@
                     <span></span><span></span><span></span>
                 </div>
             </div>
-
-            <!-- Speech bubble with typing dots -->
             <div class="char-bubble" id="char-bubble">
                 <div class="bubble-typing" id="bubble-typing">
                     <span></span><span></span><span></span>
@@ -121,15 +119,13 @@
         </div>
 
         <div class="login-form-wrap">
-            <p class="login-sys-tag">// IDENTITY_VERIFICATION</p>
+            <p class="login-sys-tag">IDENTITY VERIFICATION</p>
             <h2 class="login-title">SYSTEM LOGIN</h2>
             <p class="login-sub">Access your drops &amp; order history</p>
-
             <div class="login-field">
-                <label for="login-email">EMAIL_ADDRESS</label>
+                <label for="login-email">EMAIL ADDRESS</label>
                 <input type="email" id="login-email" placeholder="your@email.com" autocomplete="email">
             </div>
-
             <div class="login-field">
                 <label for="login-password">PASSPHRASE</label>
                 <div class="pw-wrap">
@@ -141,7 +137,6 @@
                     </button>
                 </div>
             </div>
-
             <button class="login-btn win-effect" id="login-submit">
                 <span>AUTHENTICATE</span>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -160,20 +155,22 @@
 
         <nav class="compact-nav">
             <div class="nav-logo">
-                <span class="nav-logo-text">OD</span>
+                <!-- CHANGED: logo2.png in nav -->
+                <img src="images/logo2.png" class="nav-logo-img" alt="ODCORRECT logo">
                 <span>ODCORRECT</span>
             </div>
+            <!-- CHANGED: mobile nav fixed — always visible items -->
             <ul class="nav-links">
-                <li><a href="#collection">Collection</a></li>
-                <li><a href="#archive">Archive</a></li>
+                <li class="nav-link-desktop"><a href="#collection">Collection</a></li>
+                <li class="nav-link-desktop"><a href="#archive">Archive</a></li>
                 <li><button class="login-trigger" id="open-login">LOGIN</button></li>
-                <li class="bag-icon"><a href="#"><span>BAG</span><span class="bag-count">0</span></a></li>
+                <li class="bag-icon"><a href="#"><span class="bag-text">BAG</span><span class="bag-count">0</span></a></li>
             </ul>
         </nav>
 
         <div class="hero-content">
             <div class="hero-headline-wrap">
-                <p class="hero-eyebrow reveal-up" style="--d:0s">ODCORRECT // RADHA COLLECTION</p>
+                <p class="hero-eyebrow reveal-up" style="--d:0s">ODCORRECT — RADHA COLLECTION</p>
                 <h1 class="hero-headline">
                     <span class="hl-line reveal-up" style="--d:.08s">WEAR</span>
                     <span class="hl-line hl-accent reveal-up" style="--d:.18s">THE</span>
@@ -184,25 +181,50 @@
 
             <div class="bento-grid reveal">
                 <div class="tile big-tile win-effect">
+                    <!-- CHANGED: image in tile, text overlay on top -->
                     <div class="tile-split left" onclick="openPortal('men')">
-                        <div class="tile-inner"><span class="tile-label">FOR_HIM</span><span class="tile-arrow">↗</span></div>
+                        <div class="tile-bg-img" style="background-image:url('images/model.male.jpg')"></div>
+                        <div class="tile-inner">
+                            <span class="tile-label">FOR HIM</span>
+                            <span class="tile-arrow">↗</span>
+                        </div>
                         <div class="tile-overlay-text">MEN'S</div>
                     </div>
                     <div class="tile-split right" onclick="openPortal('women')">
-                        <div class="tile-inner"><span class="tile-label">FOR_HER</span><span class="tile-arrow">↗</span></div>
+                        <div class="tile-bg-img" style="background-image:url('images/model.female.jpg')"></div>
+                        <div class="tile-inner">
+                            <span class="tile-label">FOR HER</span>
+                            <span class="tile-arrow">↗</span>
+                        </div>
                         <div class="tile-overlay-text">WOMEN'S</div>
                     </div>
                 </div>
                 <div class="small-tiles-container">
-                    <div class="tile small-tile win-effect" onclick="openPortal('baby-boy')"><span class="tile-label">BABY_BOY</span><span class="tile-arrow-sm">↗</span></div>
-                    <div class="tile small-tile win-effect" onclick="openPortal('baby-girl')"><span class="tile-label">BABY_GIRL</span><span class="tile-arrow-sm">↗</span></div>
-                    <div class="tile small-tile win-effect" onclick="openPortal('her-footwear')"><span class="tile-label">HER_FOOTWEAR</span><span class="tile-arrow-sm">↗</span></div>
-                    <div class="tile small-tile win-effect" onclick="openPortal('his-footwear')"><span class="tile-label">HIS_FOOTWEAR</span><span class="tile-arrow-sm">↗</span></div>
+                    <div class="tile small-tile win-effect" onclick="openPortal('baby-boy')">
+                        <div class="tile-bg-img" style="background-image:url('images/baby.boy.jpg')"></div>
+                        <span class="tile-label">BABY BOY</span>
+                        <span class="tile-arrow-sm">↗</span>
+                    </div>
+                    <div class="tile small-tile win-effect" onclick="openPortal('baby-girl')">
+                        <div class="tile-bg-img" style="background-image:url('images/baby.girl.jpg')"></div>
+                        <span class="tile-label">BABY GIRL</span>
+                        <span class="tile-arrow-sm">↗</span>
+                    </div>
+                    <div class="tile small-tile win-effect" onclick="openPortal('her-footwear')">
+                        <div class="tile-bg-img" style="background-image:url('images/her.shoe.jpg')"></div>
+                        <span class="tile-label">HER FOOTWEAR</span>
+                        <span class="tile-arrow-sm">↗</span>
+                    </div>
+                    <div class="tile small-tile win-effect" onclick="openPortal('his-footwear')">
+                        <div class="tile-bg-img" style="background-image:url('images/his.shoe.jpg')"></div>
+                        <span class="tile-label">HIS FOOTWEAR</span>
+                        <span class="tile-arrow-sm">↗</span>
+                    </div>
                 </div>
             </div>
 
             <button class="primary-btn win-effect reveal" onclick="document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
-                <span>EXPLORE ALL_DROP</span>
+                <span>EXPLORE ALL DROP</span>
             </button>
         </div>
     </header>
@@ -228,7 +250,7 @@
     <!-- ══ PRODUCTS ══ -->
     <section id="collection" class="products">
         <div class="section-header reveal">
-            <p class="section-tag">// LATEST_DROP</p>
+            <p class="section-tag">LATEST DROP</p>
             <h2 class="section-title">The Collection</h2>
             <div class="filter-bar">
                 <button class="filter-btn active" data-cat="all">ALL</button>
@@ -281,7 +303,7 @@
             <div class="nl-success" id="nl-success">
                 <div class="nl-success-ring">✓</div>
                 <p class="nl-success-text">ACCESS GRANTED</p>
-                <p class="nl-success-sub">SYSTEM_ONLINE // You're now in the network.</p>
+                <p class="nl-success-sub">SYSTEM_ONLINE — You're now in the network.</p>
             </div>
         </div>
     </section>
@@ -322,7 +344,8 @@
         <div class="footer-watermark">ODCORRECT</div>
         <div class="footer-top">
             <div class="footer-brand">
-                <span class="footer-logo-text">OD</span>
+                <!-- CHANGED: logo2.png in footer -->
+                <img src="images/logo2.png" class="footer-logo-img" alt="ODCORRECT">
                 <p class="footer-tagline">UNLEARN WHAT'S RIGHT</p>
             </div>
             <div class="footer-links-grid">
@@ -343,7 +366,7 @@
         <div class="footer-bottom">
             <span class="footer-copy">© 2026 ODCORRECT</span>
             <span class="footer-sep">·</span>
-            <span class="footer-copy">Designed for the Unlearned.</span>
+            <span class="footer-copy">Powered by Mrineh group.</span>
             <span class="footer-sep">·</span>
             <span class="footer-copy">All rights reserved.</span>
         </div>
