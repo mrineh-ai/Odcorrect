@@ -701,7 +701,7 @@ body.no-scroll { overflow:hidden; }
     .nav-logo-img { height:30px; }
     .nav-links { gap:8px; }
     /* CHANGED: hide Collection/Archive text links on mobile, keep LOGIN + BAG visible */
-    .nav-link-desktop { display:none; }
+    .nav-link-desktop { display:block; }
     .login-trigger { padding:8px 14px; font-size:.68rem; min-height:36px; }
     .bag-icon a { padding:8px 12px; min-height:36px; }
     .bag-text { display:inline; font-size:.68rem; }
@@ -779,5 +779,26 @@ body.no-scroll { overflow:hidden; }
 @media (max-width:600px) {
     .home .nav-logo-img {
         height: 24px;
+    }
+}
+.footer-top {
+    justify-content: space-between;
+}
+
+/* Force brand to left */
+.footer-brand {
+    align-items: flex-start;
+    text-align: left;
+}
+/* ===== FINAL FORCE FIX (HOMEPAGE NAV LOGO) ===== */
+
+body.home nav.compact-nav .nav-logo-img {
+    height: 82px !important;
+    width: auto !important;
+}
+
+@media (max-width:600px) {
+    body.home nav.compact-nav .nav-logo-img {
+        height: 32px !important;
     }
 }
