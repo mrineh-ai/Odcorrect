@@ -727,11 +727,7 @@ body.no-scroll { overflow:hidden; }
 }
 
 /* 2. FIX THE NAVIGATION LOGO */
-.nav-logo-img {
-    width: 120px !important;
-    height: auto !important;
-    display: block !important;
-}
+
 
 /* 3. FIX THE BENTO/MODEL IMAGES */
 .tile-bg-img {
@@ -760,4 +756,28 @@ body.no-scroll { overflow:hidden; }
 /* Clear the layers that might be covering it */
 .intro-grain, .intro-vignette, .intro-projector {
     display: none !important;
+}
+/* ============================================
+   NAV LOGO CONTROL — CLEAN FIX
+   ============================================ */
+
+/* Default nav logo (all pages) */
+.nav-logo-img {
+    height: 36px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+
+/* Homepage only → smaller logo */
+.home .nav-logo-img {
+    height: 26px;
+}
+
+/* Mobile adjustment (keeps proportions perfect) */
+@media (max-width:600px) {
+    .home .nav-logo-img {
+        height: 24px;
+    }
 }
