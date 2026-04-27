@@ -18,7 +18,6 @@
         <div class="intro-projector"></div>
         <div class="intro-content">
             <div class="intro-logo-wrap">
-                <!-- CHANGED: logo2.png in intro -->
                 <img src="images/logo2.png" class="intro-logo-img" alt="ODCORRECT">
                 <div class="intro-ring"></div>
                 <div class="intro-ring intro-ring-2"></div>
@@ -29,34 +28,6 @@
             <p class="intro-brand">ODCORRECT</p>
         </div>
         <div class="intro-scanline"></div>
-    </div>
-
-    <!-- ══ PORTAL POPUP ══ -->
-    <div id="portal-overlay" class="portal-overlay">
-        <div class="portal-container">
-            <div class="portal-ring-wrap">
-                <div class="portal-spark-ring"></div>
-                <div class="portal-spark-ring r2"></div>
-                <div class="portal-spark-ring r3"></div>
-                <div class="portal-inner-glow"></div>
-                <div class="portal-center">
-                    <div class="portal-particles" id="portal-particles"></div>
-                </div>
-                <div class="portal-countdown-wrap">
-                    <svg class="countdown-svg" viewBox="0 0 100 100">
-                        <circle class="countdown-track" cx="50" cy="50" r="42"/>
-                        <circle class="countdown-prog" id="countdown-arc" cx="50" cy="50" r="42"/>
-                    </svg>
-                    <span class="portal-timer" id="portal-timer">3</span>
-                </div>
-            </div>
-            <div class="portal-text-wrap">
-                <p class="portal-tag">TEMPORAL TRANSMISSION</p>
-                <h2 class="portal-headline">Travelling from<br><span class="portal-accent">The Future</span></h2>
-                <p class="portal-sub">Your cloth is folding through space-time.<br>Warping timeline now.</p>
-                <button class="portal-close-btn" id="portal-close">CANCEL TIMELINE ✕</button>
-            </div>
-        </div>
     </div>
 
     <!-- ══ LOGIN MODAL ══ -->
@@ -155,11 +126,9 @@
 
         <nav class="compact-nav">
             <div class="nav-logo">
-                <!-- CHANGED: logo2.png in nav -->
                 <img src="images/logo2.png" class="nav-logo-img" alt="ODCORRECT logo">
                 <span>ODCORRECT</span>
             </div>
-            <!-- CHANGED: mobile nav fixed — always visible items -->
             <ul class="nav-links">
                 <li class="nav-link-desktop"><a href="#collection">Collection</a></li>
                 <li class="nav-link-desktop"><a href="#archive">Archive</a></li>
@@ -181,8 +150,7 @@
 
             <div class="bento-grid reveal">
                 <div class="tile big-tile win-effect">
-                    <!-- CHANGED: image in tile, text overlay on top -->
-                    <div class="tile-split left" onclick="openPortal('men')">
+                    <div class="tile-split left" onclick="filterCategory('men'); document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
                         <div class="tile-bg-img" style="background-image:url('images/model.male.jpg')"></div>
                         <div class="tile-inner">
                             <span class="tile-label">FOR HIM</span>
@@ -190,7 +158,7 @@
                         </div>
                         <div class="tile-overlay-text">MEN'S</div>
                     </div>
-                    <div class="tile-split right" onclick="openPortal('women')">
+                    <div class="tile-split right" onclick="filterCategory('women'); document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
                         <div class="tile-bg-img" style="background-image:url('images/model.female.jpg')"></div>
                         <div class="tile-inner">
                             <span class="tile-label">FOR HER</span>
@@ -200,22 +168,22 @@
                     </div>
                 </div>
                 <div class="small-tiles-container">
-                    <div class="tile small-tile win-effect" onclick="openPortal('baby-boy')">
+                    <div class="tile small-tile win-effect" onclick="filterCategory('baby-boy'); document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
                         <div class="tile-bg-img" style="background-image:url('images/baby.boy.jpg')"></div>
                         <span class="tile-label">BABY BOY</span>
                         <span class="tile-arrow-sm">↗</span>
                     </div>
-                    <div class="tile small-tile win-effect" onclick="openPortal('baby-girl')">
+                    <div class="tile small-tile win-effect" onclick="filterCategory('baby-girl'); document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
                         <div class="tile-bg-img" style="background-image:url('images/baby.girl.jpg')"></div>
                         <span class="tile-label">BABY GIRL</span>
                         <span class="tile-arrow-sm">↗</span>
                     </div>
-                    <div class="tile small-tile win-effect" onclick="openPortal('her-footwear')">
+                    <div class="tile small-tile win-effect" onclick="filterCategory('her-footwear'); document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
                         <div class="tile-bg-img" style="background-image:url('images/her.shoe.jpg')"></div>
                         <span class="tile-label">HER FOOTWEAR</span>
                         <span class="tile-arrow-sm">↗</span>
                     </div>
-                    <div class="tile small-tile win-effect" onclick="openPortal('his-footwear')">
+                    <div class="tile small-tile win-effect" onclick="filterCategory('his-footwear'); document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
                         <div class="tile-bg-img" style="background-image:url('images/his.shoe.jpg')"></div>
                         <span class="tile-label">HIS FOOTWEAR</span>
                         <span class="tile-arrow-sm">↗</span>
@@ -223,9 +191,12 @@
                 </div>
             </div>
 
-            <button class="primary-btn win-effect reveal" onclick="document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
-                <span>EXPLORE ALL DROP</span>
-            </button>
+            <!-- FIX: Explore button is now OUTSIDE the bento-grid -->
+            <div class="cta-wrap reveal">
+                <button class="primary-btn win-effect" onclick="document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
+                    <span>Explore Collection</span>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -263,7 +234,7 @@
         <div class="product-grid reveal" id="product-grid"></div>
     </section>
 
-    <!-- ══ FEATURES STRIP — DARK INVERTED ══ -->
+    <!-- ══ FEATURES STRIP ══ -->
     <section class="features-strip reveal">
         <div class="features-watermark">OD</div>
         <div class="feature-item">
@@ -344,7 +315,6 @@
         <div class="footer-watermark">ODCORRECT</div>
         <div class="footer-top">
             <div class="footer-brand">
-                <!-- CHANGED: logo2.png in footer -->
                 <img src="images/logo2.png" class="footer-logo-img" alt="ODCORRECT">
                 <p class="footer-tagline">UNLEARN WHAT'S RIGHT</p>
             </div>
