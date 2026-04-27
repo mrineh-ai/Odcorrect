@@ -121,14 +121,36 @@ window.addEventListener("DOMContentLoaded", () => {
     }, 3800);
 });
 
-// ─── 5. NAV SHADOW ───────────────────────────
+// ─── 5. NAV BEHAVIOR (SHADOW + HIDE/SHOW) ───────────────────────────
+let lastScroll = 0;
+
 window.addEventListener("scroll", () => {
     const nav = document.querySelector(".compact-nav");
     if (!nav) return;
-    nav.style.boxShadow = window.scrollY > 40
+
+    const currentScroll = window.scrollY;
+
+    // Shadow effect (your existing logic)
+    nav.style.boxShadow = currentScroll > 40
         ? "0 8px 40px rgba(0,0,0,.13), 0 1px 0 rgba(255,255,255,.9) inset"
         : "0 4px 24px rgba(0,0,0,.08), 0 1px 0 rgba(255,255,255,.9) inset";
-}, { passive:true });
+
+    // Always show at top
+    if (currentScroll <= 0) {
+        nav.classList.remove("nav-hidden");
+        return;
+    }
+
+    // Hide on scroll down
+    if (currentScroll > lastScroll && currentScroll > 80) {
+        nav.classList.add("nav-hidden");
+    } else {
+        // Show on scroll up
+        nav.classList.remove("nav-hidden");
+    }
+
+    lastScroll = currentScroll;
+}, { passive: true });
 
 // ─── 6. PORTAL — DR STRANGE ──────────────────
 function initPortalParticles() {

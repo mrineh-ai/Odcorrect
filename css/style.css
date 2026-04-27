@@ -799,6 +799,14 @@ body.home nav.compact-nav .nav-logo-img {
 
 @media (max-width:600px) {
     body.home nav.compact-nav .nav-logo-img {
-        height: 32px !important;
+        height: 42px !important;
     }
+}
+.compact-nav {
+    transition: transform 0.35s ease, opacity 0.3s ease;
+}
+
+.compact-nav.nav-hidden {
+    transform: translate(-50%, -120%);
+    opacity: 0;
 }
