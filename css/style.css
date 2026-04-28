@@ -592,3 +592,4 @@ body.no-scroll { overflow:hidden; }
         display:block;
     }
 }
+.hero-spline-container { height:50vh; }
