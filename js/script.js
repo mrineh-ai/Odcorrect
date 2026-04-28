@@ -5,14 +5,14 @@
 
 // ─── PRODUCT DATA ─────────────────────────────
 const PRODUCTS = [
-    { id:"OC_MN_001", name:"RADHA OVERSIZED TEE",    cat:"men",      price:"₹1,299", badge:"new",  color:"#1d1d1f", desc:"Heavyweight 450gsm oversized tee with architectural silhouette." },
-    { id:"OC_WM_001", name:"RADHA CROP HOODIE",      cat:"women",    price:"₹1,899", badge:"new",  color:"#2d2d3a", desc:"Cropped hoodie with raw hem detailing and logo embroidery." },
+    { id:"OC_MN_001", name:"OVERSIZED TEE",    cat:"men",      price:"₹1,299", badge:"new",  color:"#1d1d1f", desc:"Heavyweight 450gsm oversized tee with architectural silhouette." },
+    { id:"OC_WM_001", name:"CROP HOODIE",      cat:"women",    price:"₹1,899", badge:"new",  color:"#2d2d3a", desc:"Cropped hoodie with raw hem detailing and logo embroidery." },
     { id:"OC_MN_002", name:"CORE JOGGER SET",         cat:"men",      price:"₹2,499", badge:"",     color:"#3a3a3a", desc:"Matching heavyweight joggers with engineering-grade stitching." },
     { id:"OC_WM_002", name:"REVERSE WEAVE HOODIE",   cat:"women",    price:"₹2,199", badge:"",     color:"#2a3520", desc:"Reverse weave construction for maximum shape retention." },
-    { id:"OC_BB_001", name:"MINI RADHA TEE",          cat:"baby",     price:"₹699",   badge:"new",  color:"#1d3a2a", desc:"Soft 200gsm baby tee in RADHA collection colorways." },
-    { id:"OC_BG_001", name:"BABY RADHA DRESS",        cat:"baby",     price:"₹799",   badge:"new",  color:"#3a1d2a", desc:"Tiny dress with OD branding for the next generation." },
+    { id:"OC_BB_001", name:"MINI TEE",          cat:"baby",     price:"₹699",   badge:"new",  color:"#1d3a2a", desc:"Soft 200gsm baby tee in RADHA collection colorways." },
+    { id:"OC_BG_001", name:"BABY DRESS",        cat:"baby",     price:"₹799",   badge:"new",  color:"#3a1d2a", desc:"Tiny dress with OD branding for the next generation." },
     { id:"OC_HF_001", name:"OD LOW RUNNER",           cat:"footwear", price:"₹3,999", badge:"",     color:"#1d2a3a", desc:"Low-profile runner with chunky outsole and OD tab." },
-    { id:"OC_HF_002", name:"RADHA PLATFORM SLIDE",   cat:"footwear", price:"₹1,699", badge:"sold", color:"#2a1d1d", desc:"Platform slide in premium moulded rubber. Sold out." },
+    { id:"OC_HF_002", name:"PLATFORM SLIDE",   cat:"footwear", price:"₹1,699", badge:"sold", color:"#2a1d1d", desc:"Platform slide in premium moulded rubber. Sold out." },
     { id:"OC_MN_003", name:"COACH JACKET",            cat:"men",      price:"₹3,499", badge:"",     color:"#1a1a2a", desc:"Satin-finish coach jacket with embroidered ODCORRECT badge." },
     { id:"OC_WM_003", name:"UTILITY CARGOS",          cat:"women",    price:"₹2,799", badge:"",     color:"#2a2a1a", desc:"Six-pocket utility pants with tonal OD hardware." },
     { id:"OC_MN_004", name:"TECH FLEECE HALF-ZIP",   cat:"men",      price:"₹2,099", badge:"",     color:"#1a2a2a", desc:"Textured tech fleece for the engineering aesthetic." },
