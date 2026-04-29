@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODCORRECT | Product</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/product.css">
+</head>
+<body>
+
+    <!-- ══ NAV ══ -->
+    <nav class="compact-nav">
+        <div class="nav-logo">
+            <img src="images/logo2.png" class="nav-logo-img" alt="ODCORRECT logo">
+            <span>ODCORRECT</span>
+        </div>
+        <ul class="nav-links">
+            <li class="nav-link-desktop"><a href="index.html">Home</a></li>
+            <li class="nav-link-desktop"><a href="shop.html">Shop</a></li>
+            <li class="nav-link-desktop"><a href="index.html#archive">Archive</a></li>
+            <li><a href="index.html#" class="login-trigger">LOGIN</a></li>
+            <li class="bag-icon">
+    <a href="cart.html" style="display: block; cursor: pointer;">
+        <span class="bag-text">BAG</span>
+        <span class="bag-count" id="bag-count">0</span>
+    </a>
+</li>
+        </ul>
+    </nav>
+
+    <!-- ══ BREADCRUMB ══ -->
+    <div class="breadcrumb" id="breadcrumb">
+        <a href="index.html">HOME</a>
+        <span class="bc-sep">→</span>
+        <a href="shop.html">SHOP</a>
+        <span class="bc-sep">→</span>
+        <span class="bc-current" id="bc-product-name">PRODUCT</span>
+    </div>
+
+    <!-- ══ PRODUCT DETAIL ══ -->
+    <main class="product-main" id="product-main">
+
+        <!-- LEFT: Image Gallery -->
+        <div class="product-gallery">
+            <div class="gallery-main" id="gallery-main">
+                <!-- Main visual block (replaced by real img when available) -->
+                <div class="gallery-color-block" id="gallery-color-block">
+                    <span class="gallery-block-label" id="gallery-block-label">OD</span>
+                </div>
+                <!-- Floating badges -->
+                <div class="gallery-badges" id="gallery-badges"></div>
+                <!-- Zoom hint -->
+                <div class="gallery-hint">HOVER TO ZOOM</div>
+            </div>
+
+            <!-- Thumbnail strip (placeholder thumbs) -->
+            <div class="gallery-thumbs" id="gallery-thumbs">
+                <button class="thumb active" data-idx="0" aria-label="View 1">
+                    <div class="thumb-inner" id="thumb-0"></div>
+                </button>
+                <button class="thumb" data-idx="1" aria-label="View 2">
+                    <div class="thumb-inner thumb-angle" id="thumb-1"></div>
+                </button>
+                <button class="thumb" data-idx="2" aria-label="View 3">
+                    <div class="thumb-inner thumb-detail" id="thumb-2"></div>
+                </button>
+            </div>
+        </div>
+
+        <!-- RIGHT: Product Info -->
+        <div class="product-detail-info">
+
+            <!-- Meta -->
+            <div class="pd-meta">
+                <p class="pd-cat" id="pd-cat">// CATEGORY</p>
+                <p class="pd-id" id="pd-id">CORE_ID: —</p>
+            </div>
+
+            <h1 class="pd-name" id="pd-name">PRODUCT NAME</h1>
+            <p class="pd-price" id="pd-price">₹0</p>
+
+            <!-- Star rating (static UI, wire to backend reviews later) -->
+            <div class="pd-rating">
+                <div class="stars">★★★★★</div>
+                <span class="rating-count">48 reviews</span>
+            </div>
+
+            <p class="pd-desc" id="pd-desc">Loading product description...</p>
+
+            <!-- Color -->
+            <div class="pd-option-group">
+                <p class="pd-option-label">COLOR — <span id="pd-selected-color">BLACK</span></p>
+                <div class="pd-swatches" id="pd-swatches"></div>
+            </div>
+
+            <!-- Size -->
+            <div class="pd-option-group">
+                <div class="pd-option-header">
+                    <p class="pd-option-label">SIZE — <span id="pd-selected-size">M</span></p>
+                    <button class="size-guide-btn" id="size-guide-toggle">SIZE GUIDE ↘</button>
+                </div>
+                <div class="pd-size-grid" id="pd-size-grid">
+                    <button class="pd-size-btn" data-size="XS">XS</button>
+                    <button class="pd-size-btn" data-size="S">S</button>
+                    <button class="pd-size-btn active" data-size="M">M</button>
+                    <button class="pd-size-btn" data-size="L">L</button>
+                    <button class="pd-size-btn" data-size="XL">XL</button>
+                    <button class="pd-size-btn" data-size="XXL">XXL</button>
+                </div>
+
+                <!-- Size guide drawer -->
+                <div class="size-guide-drawer" id="size-guide-drawer">
+                    <table class="size-table">
+                        <thead>
+                            <tr>
+                                <th>SIZE</th><th>CHEST (in)</th><th>LENGTH (in)</th><th>SHOULDER (in)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>XS</td><td>36–38</td><td>27</td><td>17</td></tr>
+                            <tr><td>S</td> <td>38–40</td><td>28</td><td>18</td></tr>
+                            <tr><td>M</td> <td>40–42</td><td>29</td><td>19</td></tr>
+                            <tr><td>L</td> <td>42–44</td><td>30</td><td>20</td></tr>
+                            <tr><td>XL</td><td>44–46</td><td>31</td><td>21</td></tr>
+                            <tr><td>XXL</td><td>46–48</td><td>32</td><td>22</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="size-note">All measurements are in inches. Model is 6'1" wearing size L.</p>
+                </div>
+            </div>
+
+            <!-- Qty -->
+            <div class="pd-option-group pd-qty-group">
+                <p class="pd-option-label">QUANTITY</p>
+                <div class="pd-qty-row">
+                    <div class="qty-control">
+                        <button class="qty-btn" id="pd-qty-minus">−</button>
+                        <span class="qty-value" id="pd-qty-value">1</span>
+                        <button class="qty-btn" id="pd-qty-plus">+</button>
+                    </div>
+                    <span class="stock-label" id="stock-label">IN STOCK</span>
+                </div>
+            </div>
+
+            <!-- CTAs -->
+            <div class="pd-cta-row">
+                <button class="primary-btn win-effect pd-add-btn" id="pd-add-btn">
+                    <span>ADD TO BAG</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                        <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                </button>
+                <button class="wishlist-btn" id="wishlist-btn" aria-label="Add to wishlist">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="wishlist-icon">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Delivery info -->
+            <div class="delivery-strip">
+                <div class="delivery-item">
+                    <span class="delivery-icon">⟲</span>
+                    <span>FREE returns within 30 days</span>
+                </div>
+                <div class="delivery-item">
+                    <span class="delivery-icon">◈</span>
+                    <span>Ships in 3–5 business days</span>
+                </div>
+                <div class="delivery-item">
+                    <span class="delivery-icon">✦</span>
+                    <span>Authenticated drop — no fakes</span>
+                </div>
+            </div>
+
+            <!-- Accordion specs -->
+            <div class="pd-accordion">
+                <button class="accordion-btn active" data-target="specs">
+                    TECHNICAL SPECIFICATIONS
+                    <span class="acc-arrow">↓</span>
+                </button>
+                <div class="accordion-body open" id="acc-specs">
+                    <ul class="spec-list">
+                        <li>HEAVYWEIGHT 450GSM COTTON</li>
+                        <li>OVERSIZED ARCHITECTURAL FIT</li>
+                        <li>REINFORCED DOUBLE-NEEDLE STITCHING</li>
+                        <li>FUTURE-PROOF COLORFASTNESS</li>
+                        <li>GARMENT DYE — WASH COLD</li>
+                        <li>100% RING-SPUN COTTON</li>
+                    </ul>
+                </div>
+
+                <button class="accordion-btn" data-target="shipping">
+                    SHIPPING & RETURNS
+                    <span class="acc-arrow">↓</span>
+                </button>
+                <div class="accordion-body" id="acc-shipping">
+                    <p>Free shipping on orders above ₹999. Standard delivery 3–5 days. Express available at checkout. Returns accepted within 30 days — no questions asked.</p>
+                </div>
+
+                <button class="accordion-btn" data-target="care">
+                    CARE INSTRUCTIONS
+                    <span class="acc-arrow">↓</span>
+                </button>
+                <div class="accordion-body" id="acc-care">
+                    <p>Machine wash cold on gentle cycle. Do not tumble dry. Hang dry in shade. Do not iron directly on print. Do not bleach.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ══ RELATED PRODUCTS ══ -->
+    <section class="related-section">
+        <div class="related-header">
+            <p class="section-tag">YOU MIGHT ALSO LIKE</p>
+            <h2 class="related-title">MORE DROPS</h2>
+        </div>
+        <div class="related-grid" id="related-grid"></div>
+    </section>
+
+    <!-- ══ TOAST ══ -->
+    <div class="toast" id="toast">
+        <div class="toast-icon">✓</div>
+        <div class="toast-content">
+            <p class="toast-title">ADDED TO BAG</p>
+            <p class="toast-sub" id="toast-sub">Item added</p>
+        </div>
+        <a href="cart.html" class="toast-cta">VIEW BAG →</a>
+    </div>
+
+    <!-- ══ FOOTER ══ -->
+    <footer class="footer">
+        <div class="footer-watermark">ODCORRECT</div>
+        <div class="footer-top">
+            <div class="footer-brand">
+                <img src="images/logo2.png" class="footer-logo-img" alt="ODCORRECT">
+                <p class="footer-tagline">UNLEARN WHAT'S RIGHT</p>
+            </div>
+            <div class="footer-links-grid">
+                <div class="footer-col">
+                    <p class="footer-col-title">COLLECTION</p>
+                    <a href="shop.html">Men's Drop</a>
+                    <a href="shop.html">Women's Drop</a>
+                    <a href="shop.html">Baby Collection</a>
+                    <a href="shop.html">Footwear</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">SYSTEM</p>
+                    <a href="#">Archive</a><a href="#">About</a>
+                    <a href="#">Contact</a><a href="#">Careers</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">SUPPORT</p>
+                    <a href="#">Size Guide</a><a href="#">Returns</a>
+                    <a href="#">Shipping</a><a href="#">FAQ</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span class="footer-copy">© 2026 ODCORRECT</span>
+            <span class="footer-sep">·</span>
+            <span class="footer-copy">Powered by Mrineh group.</span>
+        </div>
+    </footer>
+
+    <script src="js/cart.js"></script>
+    <script src="js/product.js"></script>
+</body>
+</html>

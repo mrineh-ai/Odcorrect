@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODCORRECT | Your Bag</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/cart.css">
+</head>
+<body>
+
+    <!-- ══ NAV ══ -->
+    <nav class="compact-nav">
+        <div class="nav-logo">
+            <img src="images/logo2.png" class="nav-logo-img" alt="ODCORRECT logo">
+            <span>ODCORRECT</span>
+        </div>
+        <ul class="nav-links">
+            <li class="nav-link-desktop"><a href="index.html">Home</a></li>
+            <li class="nav-link-desktop"><a href="shop.html">Shop</a></li>
+            <li class="nav-link-desktop"><a href="#">Archive</a></li>
+            <li><a href="index.html#" class="login-trigger">LOGIN</a></li>
+            <li class="bag-icon">
+                <a href="cart.html">
+                    <span class="bag-text">BAG</span>
+                    <span class="bag-count" id="bag-count">0</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- ══ CART HEADER ══ -->
+    <header class="cart-hero">
+        <div class="cart-hero-bg"></div>
+        <div class="cart-hero-content">
+            <p class="cart-eyebrow">SYSTEM: BAG_MODULE</p>
+            <h1 class="cart-title">YOUR BAG</h1>
+            <p class="cart-count-label"><span id="cart-item-count">0</span> ITEMS SELECTED</p>
+        </div>
+    </header>
+
+    <!-- ══ CART BODY ══ -->
+    <main class="cart-main">
+
+        <!-- ── EMPTY STATE ── -->
+        <div class="cart-empty" id="cart-empty">
+            <div class="empty-icon">◈</div>
+            <h2 class="empty-title">BAG IS EMPTY</h2>
+            <p class="empty-sub">Your bag contains no items. Start shopping.</p>
+            <a href="shop.html" class="primary-btn win-effect">
+                <span>EXPLORE COLLECTION</span>
+            </a>
+        </div>
+
+        <!-- ── CART CONTENT ── -->
+        <div class="cart-layout" id="cart-content" style="display:none">
+
+            <!-- Cart Items -->
+            <div class="cart-items-col">
+                <div class="cart-col-header">
+                    <p class="col-label">PRODUCT</p>
+                    <p class="col-label col-center">QTY</p>
+                    <p class="col-label col-right">TOTAL</p>
+                </div>
+                <div id="cart-items-list"></div>
+                <div class="cart-actions-row">
+                    <button class="ghost-btn" id="clear-cart-btn">CLEAR BAG</button>
+                    <a href="shop.html" class="ghost-btn">← CONTINUE SHOPPING</a>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <aside class="cart-summary-col">
+                <div class="summary-card">
+                    <p class="summary-sys-tag">SYSTEM: ORDER_SUMMARY</p>
+                    <h2 class="summary-title">ORDER BREAKDOWN</h2>
+
+                    <div class="summary-lines" id="summary-lines">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <div class="summary-divider"></div>
+
+                    <div class="summary-row subtotal-row">
+                        <span>SUBTOTAL</span>
+                        <span id="summary-subtotal">₹0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>SHIPPING</span>
+                        <span id="summary-shipping" class="accent-text">FREE</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>TAX (18% GST)</span>
+                        <span id="summary-tax">₹0</span>
+                    </div>
+
+                    <div class="summary-divider"></div>
+
+                    <div class="summary-row total-row">
+                        <span>TOTAL</span>
+                        <span id="summary-total">₹0</span>
+                    </div>
+
+                    <!-- Promo code -->
+                    <div class="promo-row">
+                        <input type="text" class="promo-input" id="promo-input" placeholder="PROMO_CODE">
+                        <button class="promo-btn win-effect" id="promo-btn">APPLY</button>
+                    </div>
+                    <p class="promo-feedback" id="promo-feedback"></p>
+
+                    <!-- CTA -->
+                    <button class="primary-btn win-effect checkout-btn" id="checkout-btn">
+                        <span>PROCEED TO CHECKOUT</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </button>
+
+                    <div class="trust-badges">
+                        <div class="trust-item">
+                            <span class="trust-icon">⟲</span>
+                            <span>FREE RETURNS</span>
+                        </div>
+                        <div class="trust-item">
+                            <span class="trust-icon">◈</span>
+                            <span>SECURE CHECKOUT</span>
+                        </div>
+                        <div class="trust-item">
+                            <span class="trust-icon">✦</span>
+                            <span>AUTHENTIC DROP</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- ══ CHECKOUT MODAL ══ -->
+    <div id="checkout-backdrop" class="login-backdrop"></div>
+    <div id="checkout-modal" class="checkout-modal">
+        <button class="login-modal-close" id="checkout-close" aria-label="Close">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+        <div class="checkout-modal-inner">
+            <p class="checkout-sys-tag">SYSTEM: PAYMENT_MODULE</p>
+            <h2 class="checkout-modal-title">CHECKOUT</h2>
+            <p class="checkout-modal-sub">This frontend skeleton is ready to connect to your Node.js backend.</p>
+
+            <div class="checkout-info-grid">
+                <div class="checkout-info-item">
+                    <span class="ci-label">ENDPOINT</span>
+                    <span class="ci-val">POST /api/orders/create</span>
+                </div>
+                <div class="checkout-info-item">
+                    <span class="ci-label">PAYLOAD</span>
+                    <span class="ci-val">cart[] + user + address</span>
+                </div>
+                <div class="checkout-info-item">
+                    <span class="ci-label">PAYMENT</span>
+                    <span class="ci-val">Razorpay / Stripe ready</span>
+                </div>
+            </div>
+
+            <div class="checkout-total-display">
+                <span class="checkout-total-label">ORDER TOTAL</span>
+                <span class="checkout-total-value" id="modal-total">₹0</span>
+            </div>
+
+            <button class="primary-btn win-effect" id="mock-pay-btn" style="width:100%">
+                <span>MOCK PAYMENT — PLACE ORDER</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ══ ORDER SUCCESS ══ -->
+    <div class="order-success-overlay" id="order-success">
+        <div class="order-success-card">
+            <div class="success-ring">✓</div>
+            <p class="success-sys">SYSTEM: ORDER_CONFIRMED</p>
+            <h2 class="success-title">ORDER PLACED</h2>
+            <p class="success-sub">Your drop is on its way. Check your email for confirmation.</p>
+            <p class="success-id" id="success-order-id">ORDER_ID: —</p>
+            <a href="shop.html" class="primary-btn win-effect" style="margin-top:24px">
+                <span>CONTINUE SHOPPING</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ══ FOOTER ══ -->
+    <footer class="footer">
+        <div class="footer-watermark">ODCORRECT</div>
+        <div class="footer-top">
+            <div class="footer-brand">
+                <img src="images/logo2.png" class="footer-logo-img" alt="ODCORRECT">
+                <p class="footer-tagline">UNLEARN WHAT'S RIGHT</p>
+            </div>
+            <div class="footer-links-grid">
+                <div class="footer-col">
+                    <p class="footer-col-title">COLLECTION</p>
+                    <a href="#">Men's Drop</a><a href="#">Women's Drop</a>
+                    <a href="#">Baby Collection</a><a href="#">Footwear</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">SUPPORT</p>
+                    <a href="#">Size Guide</a><a href="#">Returns</a>
+                    <a href="#">Shipping</a><a href="#">FAQ</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span class="footer-copy">© 2026 ODCORRECT</span>
+            <span class="footer-sep">·</span>
+            <span class="footer-copy">Powered by Mrineh group.</span>
+        </div>
+    </footer>
+
+    <script src="js/cart.js"></script>
+    <script src="js/cart-page.js"></script>
+</body>
+</html>

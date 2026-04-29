@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODCORRECT | Shop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/shop.css">
+</head>
+<body>
+
+    <!-- ══ NAV ══ -->
+    <nav class="compact-nav">
+        <div class="nav-logo">
+            <img src="images/logo2.png" class="nav-logo-img" alt="ODCORRECT logo">
+            <span>ODCORRECT</span>
+        </div>
+        <ul class="nav-links">
+            <li class="nav-link-desktop"><a href="index.html">Home</a></li>
+            <li class="nav-link-desktop"><a href="shop.html" class="nav-active">Shop</a></li>
+            <li class="nav-link-desktop"><a href="#archive">Archive</a></li>
+            <li><a href="index.html#" class="login-trigger" id="open-login">LOGIN</a></li>
+            <li class="bag-icon">
+                <a href="cart.html">
+                    <span class="bag-text">BAG</span>
+                    <span class="bag-count" id="bag-count">0</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- ══ SHOP HEADER ══ -->
+    <header class="shop-hero">
+        <div class="shop-hero-bg"></div>
+        <div class="shop-hero-noise"></div>
+        <div class="shop-hero-content">
+            <p class="shop-eyebrow">RADHA COLLECTION 2026</p>
+            <h1 class="shop-title">THE FULL DROP</h1>
+            <p class="shop-subtitle">450GSM heavyweight pieces engineered for the supercool generation.</p>
+        </div>
+        <!-- Animated scan line -->
+        <div class="shop-scanline"></div>
+    </header>
+
+    <!-- ══ FILTER + SORT BAR ══ -->
+    <div class="shop-controls reveal">
+        <div class="filter-bar">
+            <button class="filter-btn active" data-cat="all">ALL</button>
+            <button class="filter-btn" data-cat="men">MEN</button>
+            <button class="filter-btn" data-cat="women">WOMEN</button>
+            <button class="filter-btn" data-cat="baby">BABY</button>
+            <button class="filter-btn" data-cat="footwear">FOOTWEAR</button>
+        </div>
+        <div class="sort-wrap">
+            <label class="sort-label">SORT:</label>
+            <select class="sort-select" id="sort-select">
+                <option value="default">FEATURED</option>
+                <option value="price-asc">PRICE ↑</option>
+                <option value="price-desc">PRICE ↓</option>
+                <option value="name">NAME</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- ══ RESULTS COUNT ══ -->
+    <div class="results-bar reveal">
+        <span class="results-count" id="results-count">12 ITEMS</span>
+        <span class="results-sep">—</span>
+        <span class="results-cat" id="results-cat">ALL CATEGORIES</span>
+    </div>
+
+    <!-- ══ PRODUCT GRID ══ -->
+    <main class="shop-main">
+        <div class="product-grid reveal" id="shop-product-grid"></div>
+    </main>
+
+    <!-- ══ TOAST NOTIFICATION ══ -->
+    <div class="toast" id="toast">
+        <div class="toast-icon">✓</div>
+        <div class="toast-content">
+            <p class="toast-title">ADDED TO BAG</p>
+            <p class="toast-sub" id="toast-sub">Item added</p>
+        </div>
+        <a href="cart.html" class="toast-cta">VIEW BAG →</a>
+    </div>
+
+    <!-- ══ QUICK VIEW PANEL ══ -->
+    <div id="panel-backdrop"></div>
+    <aside id="product-overlay" class="product-side-panel">
+        <div class="panel-close"><button id="close-panel">CLOSE ✕</button></div>
+        <div class="panel-content">
+            <div class="panel-image">
+                <div class="panel-img-placeholder" id="panel-img-placeholder"></div>
+            </div>
+            <div class="panel-info">
+                <p class="spec-id" id="overlay-spec">CORE_ID: OC_MN_2026</p>
+                <h2 id="overlay-title">PRODUCT_NAME</h2>
+                <p id="overlay-price" class="panel-price">₹0</p>
+                <p id="overlay-desc" class="panel-desc">Premium engineering-grade apparel.</p>
+
+                <!-- Color swatches -->
+                <div class="color-selector" id="color-selector">
+                    <p class="selector-label">COLOR: <span id="selected-color">BLACK</span></p>
+                    <div class="color-swatches" id="color-swatches"></div>
+                </div>
+
+                <!-- Size selector -->
+                <div class="size-selector-wrap">
+                    <p class="selector-label">SIZE: <span id="selected-size">M</span></p>
+                    <div class="size-selector">
+                        <button class="size-btn" data-size="XS">XS</button>
+                        <button class="size-btn" data-size="S">S</button>
+                        <button class="size-btn active" data-size="M">M</button>
+                        <button class="size-btn" data-size="L">L</button>
+                        <button class="size-btn" data-size="XL">XL</button>
+                        <button class="size-btn" data-size="XXL">XXL</button>
+                    </div>
+                </div>
+
+                <!-- Qty + CTA -->
+                <div class="qty-row">
+                    <div class="qty-control">
+                        <button class="qty-btn" id="qty-minus">−</button>
+                        <span class="qty-value" id="qty-value">1</span>
+                        <button class="qty-btn" id="qty-plus">+</button>
+                    </div>
+                    <button class="primary-btn win-effect add-bag-btn" id="panel-add-btn">
+                        <span>ADD_TO_BAG</span>
+                    </button>
+                </div>
+
+                <div class="technical-details">
+                    <h3>TECHNICAL SPECIFICATIONS</h3>
+                    <ul>
+                        <li>HEAVYWEIGHT 450GSM COTTON</li>
+                        <li>OVERSIZED ARCHITECTURAL FIT</li>
+                        <li>REINFORCED DOUBLE-NEEDLE STITCHING</li>
+                        <li>FUTURE-PROOF COLORFASTNESS</li>
+                        <li>GARMENT DYE — WASH COLD</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ══ FOOTER ══ -->
+    <footer class="footer" id="archive">
+        <div class="footer-watermark">ODCORRECT</div>
+        <div class="footer-top">
+            <div class="footer-brand">
+                <img src="images/logo2.png" class="footer-logo-img" alt="ODCORRECT">
+                <p class="footer-tagline">UNLEARN WHAT'S RIGHT</p>
+            </div>
+            <div class="footer-links-grid">
+                <div class="footer-col">
+                    <p class="footer-col-title">COLLECTION</p>
+                    <a href="#">Men's Drop</a><a href="#">Women's Drop</a>
+                    <a href="#">Baby Collection</a><a href="#">Footwear</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">SYSTEM</p>
+                    <a href="#">Archive</a><a href="#">About</a>
+                    <a href="#">Contact</a><a href="#">Careers</a>
+                </div>
+                <div class="footer-col">
+                    <p class="footer-col-title">SUPPORT</p>
+                    <a href="#">Size Guide</a><a href="#">Returns</a>
+                    <a href="#">Shipping</a><a href="#">FAQ</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span class="footer-copy">© 2026 ODCORRECT</span>
+            <span class="footer-sep">·</span>
+            <span class="footer-copy">Powered by Mrineh group.</span>
+            <span class="footer-sep">·</span>
+            <span class="footer-copy">All rights reserved.</span>
+        </div>
+    </footer>
+
+    <script src="js/cart.js"></script>
+    <script src="js/shop.js"></script>
+</body>
+</html>
