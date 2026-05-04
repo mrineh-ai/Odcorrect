@@ -7,7 +7,7 @@
 
 // ─── SHARED PRODUCT DATA ────────────────────────────
 // Keep in sync with shop.js. In production: fetch from API.
-const ALL_PRODUCTS = [
+let ALL_PRODUCTS = [
     { id:"OC_MN_001", name:"OVERSIZED TEE",       cat:"men",      priceNum:1299, price:"₹1,299", badge:"new",  color:"#1d1d1f", colors:[{name:"BLACK",hex:"#1d1d1f"},{name:"CHALK",hex:"#e8e8e0"},{name:"OLIVE",hex:"#3d4228"}], desc:"Heavyweight 450gsm oversized tee with architectural silhouette. Dropped shoulders, boxy cut — engineered to keep its shape drop after drop. RADHA 2026 back-print in tonal ink." },
     { id:"OC_WM_001", name:"CROP HOODIE",          cat:"women",    priceNum:1899, price:"₹1,899", badge:"new",  color:"#2d2d3a", colors:[{name:"MIDNIGHT",hex:"#2d2d3a"},{name:"BLUSH",hex:"#c8a0a0"}], desc:"Cropped hoodie with raw hem detailing and OD logo embroidery. Kangaroo pocket. 400gsm reverse weave." },
     { id:"OC_MN_002", name:"CORE JOGGER SET",       cat:"men",      priceNum:2499, price:"₹2,499", badge:"",    color:"#3a3a3a", colors:[{name:"CHARCOAL",hex:"#3a3a3a"},{name:"CREAM",hex:"#f0ede6"}], desc:"Matching heavyweight joggers with engineering-grade stitching and cuffed ankle. Elasticated waistband with OD taping." },
@@ -21,6 +21,35 @@ const ALL_PRODUCTS = [
     { id:"OC_MN_004", name:"TECH FLEECE HALF-ZIP",  cat:"men",      priceNum:2099, price:"₹2,099", badge:"",   color:"#1a2a2a", colors:[{name:"TEAL",hex:"#1a2a2a"},{name:"STONE",hex:"#8a8a7a"}], desc:"Textured tech fleece for the engineering aesthetic. Thumb holes. Half-zip construction." },
     { id:"OC_WM_004", name:"WIDE LEG SWEATS",       cat:"women",    priceNum:1999, price:"₹1,999", badge:"new",color:"#2a1a2a", colors:[{name:"PLUM",hex:"#2a1a2a"},{name:"CREAM",hex:"#f0ede6"}], desc:"Ultra wide leg with elasticated waistband and OD tape stripe. 380gsm fleece-back cotton." }
 ];
+
+function normalizeApiProduct(p) {
+    const priceNum = Number(p.priceNum ?? p.price ?? 0);
+    return {
+        ...p,
+        cat: p.cat || p.category || "men",
+        priceNum,
+        price: typeof p.price === "string" ? p.price : formatPrice(priceNum),
+        color: p.color || "#1d1d1f",
+        colors: Array.isArray(p.colors) && p.colors.length
+            ? p.colors
+            : [{ name: "DEFAULT", hex: p.color || "#1d1d1f" }],
+        desc: p.desc || p.description || ""
+    };
+}
+
+async function loadProductsFromApi() {
+    try {
+        const response = await fetch("/api/products");
+        if (!response.ok) return;
+
+        const result = await response.json();
+        if (result.success && Array.isArray(result.products)) {
+            ALL_PRODUCTS = result.products.map(normalizeApiProduct);
+        }
+    } catch {
+        // Keep the bundled product data as a fallback.
+    }
+}
 
 const CAT_LABELS = { men:"M", women:"W", baby:"B", footwear:"F" };
 
@@ -38,7 +67,8 @@ function getProductIdFromURL() {
     return new URLSearchParams(window.location.search).get("id");
 }
 
-function loadProduct() {
+async function loadProduct() {
+    await loadProductsFromApi();
     const id = getProductIdFromURL();
     product = ALL_PRODUCTS.find(p => p.id === id);
 

@@ -23,6 +23,7 @@
  */
 
 const CART_KEY = "odcorrect_cart";
+const AUTH_KEY = "odcorrect_user";
 
 // ─── Core Cart API ──────────────────────────────────────
 
@@ -165,3 +166,62 @@ function formatPrice(amount) {
 
 // ─── Initialise count on every page load ───────────────
 document.addEventListener("DOMContentLoaded", updateBagCount);
+
+function getAuthUser() {
+    try {
+        return JSON.parse(localStorage.getItem(AUTH_KEY));
+    } catch {
+        return null;
+    }
+}
+
+function clearAuthUser() {
+    localStorage.removeItem(AUTH_KEY);
+    updateAuthNav();
+}
+
+function saveAuthUser(user) {
+    localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+    updateAuthNav();
+}
+
+function updateAuthNav() {
+    const user = getAuthUser();
+    document.querySelectorAll(".login-trigger").forEach(trigger => {
+        if (!user) {
+            trigger.classList.remove("logged-in");
+            trigger.textContent = "LOGIN";
+            return;
+        }
+
+        trigger.classList.add("logged-in");
+        trigger.textContent = `HI ${user.name.toUpperCase()}`;
+        trigger.title = user.email || "";
+        if (trigger.tagName === "A") {
+            trigger.setAttribute("href", "#");
+            trigger.addEventListener("click", e => e.preventDefault(), { once:false });
+        }
+    });
+}
+
+async function syncAuthFromServer() {
+    try {
+        const response = await fetch("/api/me");
+        if (!response.ok) {
+            clearAuthUser();
+            return;
+        }
+
+        const result = await response.json();
+        if (result.success && result.user) {
+            saveAuthUser(result.user);
+        } else {
+            clearAuthUser();
+        }
+    } catch {
+        updateAuthNav();
+    }
+}
+
+document.addEventListener("DOMContentLoaded", updateAuthNav);
+document.addEventListener("DOMContentLoaded", syncAuthFromServer);

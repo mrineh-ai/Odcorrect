@@ -254,50 +254,59 @@ document.getElementById("checkout-btn")?.addEventListener("click", openCheckout)
 document.getElementById("checkout-close")?.addEventListener("click", closeCheckout);
 document.getElementById("checkout-backdrop")?.addEventListener("click", closeCheckout);
 
-// ─── MOCK PAYMENT ────────────────────────────────────────
+// ─── DATABASE ORDER CHECKOUT ─────────────────────────────
 
-/**
- * Simulates placing an order.
- * In production: POST to /api/orders/create with cart payload + user auth token.
- *
- * Expected request body:
- * {
- *   items: getCart(),
- *   subtotal: getCartSubtotal(),
- *   promo: appliedPromo?.label || null,
- *   // address + user fields from a form
- * }
- *
- * On success: clear cart, show confirmation with order ID.
- */
 document.getElementById("mock-pay-btn")?.addEventListener("click", async () => {
     const btn = document.getElementById("mock-pay-btn");
     if (!btn) return;
 
-    // Show loading state
-    btn.textContent = "PROCESSING...";
+    const cart = getCart();
+    if (cart.length === 0) {
+        alert("Your bag is empty.");
+        return;
+    }
+
+    btn.textContent = "PLACING ORDER...";
     btn.disabled = true;
 
-    // Simulate network request (replace with real fetch call)
-    await new Promise(r => setTimeout(r, 1400));
+    try {
+        const response = await fetch("/api/orders/create", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                items: cart,
+                promo: appliedPromo?.label || null
+            })
+        });
 
-    // Generate mock order ID
-    const orderId = "OD-" + Date.now().toString(36).toUpperCase();
+        const result = await response.json();
 
-    // Clear cart
-    clearCart();
-    appliedPromo = null;
+        if (response.status === 401) {
+            alert(result.message || "Please login before placing an order.");
+            window.location.href = "/";
+            return;
+        }
 
-    // Close checkout modal
-    closeCheckout();
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "Order failed");
+        }
 
-    // Show success overlay
-    const successEl = document.getElementById("order-success");
-    const orderIdEl = document.getElementById("success-order-id");
-    if (orderIdEl) orderIdEl.textContent = `ORDER_ID: ${orderId}`;
-    if (successEl) {
-        successEl.style.display = "flex";
-        successEl.style.animation = "successFadeIn .6s cubic-bezier(.34,1.56,.64,1) forwards";
+        clearCart();
+        appliedPromo = null;
+        closeCheckout();
+
+        const successEl = document.getElementById("order-success");
+        const orderIdEl = document.getElementById("success-order-id");
+        if (orderIdEl) orderIdEl.textContent = `ORDER_ID: ${result.order.id}`;
+        if (successEl) {
+            successEl.style.display = "flex";
+            successEl.style.animation = "successFadeIn .6s cubic-bezier(.34,1.56,.64,1) forwards";
+        }
+    } catch (error) {
+        alert(error.message || "Could not place order. Try again.");
+    } finally {
+        btn.textContent = "PLACE ORDER";
+        btn.disabled = false;
     }
 });
 

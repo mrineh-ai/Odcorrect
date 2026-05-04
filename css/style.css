@@ -216,7 +216,17 @@ body.no-scroll { overflow:hidden; }
 .login-field input:focus { border-color:var(--accent); box-shadow:0 0 0 4px var(--accent-glow); }
 .pw-wrap { position:relative; }
 .pw-wrap input { padding-right:48px; }
-.pw-toggle { position:absolute; top:50%; right:14px; border:0; background:none; color:var(--text-3); transform:translateY(-50%); }
+.pw-toggle {
+    position:absolute; top:50%; right:12px;
+    display:grid; width:34px; height:34px; place-items:center;
+    border:0; border-radius:50%; background:transparent;
+    color:var(--text-3); transform:translateY(-50%);
+    transition:background .2s, color .2s, transform .2s;
+}
+.pw-toggle:hover { background:rgba(0,0,0,.05); color:var(--text-1); }
+.pw-toggle:active { transform:translateY(-50%) scale(.92); }
+.pw-toggle svg { display:block; pointer-events:none; }
+.login-trigger.logged-in { background:var(--accent); color:#fff; border-color:transparent; }
 .login-btn {
     display:flex; align-items:center; justify-content:center; gap:10px;
     width:100%; margin:8px 0 20px; border:0; border-radius:var(--r-sm);

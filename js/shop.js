@@ -7,7 +7,7 @@
 // ─── PRODUCT DATA ───────────────────────────────────────
 // Mirror of the data in script.js — single source of truth
 // In a real app this would come from a backend API: GET /api/products
-const SHOP_PRODUCTS = [
+let SHOP_PRODUCTS = [
     {
         id:"OC_MN_001", name:"OVERSIZED TEE",          cat:"men",
         priceNum:1299,  price:"₹1,299",  badge:"new",
@@ -94,6 +94,35 @@ const SHOP_PRODUCTS = [
         desc:"Ultra wide leg with elasticated waistband and OD tape stripe."
     }
 ];
+
+function normalizeApiProduct(p) {
+    const priceNum = Number(p.priceNum ?? p.price ?? 0);
+    return {
+        ...p,
+        cat: p.cat || p.category || "men",
+        priceNum,
+        price: typeof p.price === "string" ? p.price : formatPrice(priceNum),
+        color: p.color || "#1d1d1f",
+        colors: Array.isArray(p.colors) && p.colors.length
+            ? p.colors
+            : [{ name: "DEFAULT", hex: p.color || "#1d1d1f" }],
+        desc: p.desc || p.description || ""
+    };
+}
+
+async function loadShopProductsFromApi() {
+    try {
+        const response = await fetch("/api/products");
+        if (!response.ok) return;
+
+        const result = await response.json();
+        if (result.success && Array.isArray(result.products)) {
+            SHOP_PRODUCTS = result.products.map(normalizeApiProduct);
+        }
+    } catch {
+        // Keep the bundled product data as a fallback.
+    }
+}
 
 // ─── CAT LABELS (for geometric placeholder blocks) ──────
 const CAT_LABELS = { men:"M", women:"W", baby:"B", footwear:"F" };
@@ -438,7 +467,8 @@ document.addEventListener("keydown", e => {
 
 // ─── INIT ───────────────────────────────────────────────
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadShopProductsFromApi();
     renderShopProducts();
     initFilters();
     initWinEffect();

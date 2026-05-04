@@ -53,36 +53,43 @@
             </div>
         </div>
 
-        <div class="login-form-wrap">
-            <p class="login-sys-tag">IDENTITY VERIFICATION</p>
-            <h2 class="login-title">SYSTEM LOGIN</h2>
-            <p class="login-sub">Access your drops &amp; order history</p>
-            <div class="login-field">
-                <label for="login-email">EMAIL ADDRESS</label>
-                <input type="email" id="login-email" placeholder="your@email.com" autocomplete="email">
-            </div>
-            <div class="login-field">
-                <label for="login-password">PASSPHRASE</label>
-                <div class="pw-wrap">
-                    <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
-                    <button type="button" class="pw-toggle" id="pw-toggle" aria-label="Show password">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="pw-eye-icon">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            <button class="login-btn win-effect" id="login-submit">
-                <span>AUTHENTICATE</span>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-                </svg>
-            </button>
-            <p class="login-foot">New here? <a href="#">Request Access →</a></p>
+      <div class="login-form-wrap">
+    <p class="login-sys-tag">IDENTITY VERIFICATION</p>
+    <h2 class="login-title">SYSTEM LOGIN</h2>
+    <p class="login-sub">Access your drops &amp; order history</p>
+    
+    <!-- WRAP THIS SECTION IN A FORM TAG -->
+    <form id="login-form">
+        <div class="login-field">
+            <label for="login-email">EMAIL ADDRESS</label>
+            <input type="email" id="login-email" name="email" placeholder="your@email.com" autocomplete="email" required>
         </div>
-    </div>
+        <div class="login-field">
+            <label for="login-password">PASSPHRASE</label>
+            <div class="pw-wrap">
+                <input type="password" id="login-password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+                <button type="button" class="pw-toggle" id="pw-toggle" aria-label="Show password">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="pw-eye-icon">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <button type="submit" class="login-btn win-effect" id="login-submit">
+            <span>AUTHENTICATE</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+        </button>
+    </form>
+    
+    <p class="login-foot">New here? <a href="#">Request Access →</a></p>
+</div>
+</div>
 
     <!-- ══ HERO ══ -->
+
     <header class="hero">
         <div class="hero-bg"></div>
         <div class="hero-noise"></div>
