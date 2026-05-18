@@ -17,6 +17,9 @@ const PROMO_CODES = {
 };
 
 let appliedPromo = null; // currently applied promo object
+let savedAddresses = [];
+let selectedAddressId = null;
+let addressMode = "new";
 
 // ─── RENDER CART ────────────────────────────────────────
 
@@ -214,7 +217,7 @@ document.getElementById("promo-btn")?.addEventListener("click", () => {
     }
 
     if (PROMO_CODES[code]) {
-        appliedPromo = PROMO_CODES[code];
+        appliedPromo = { ...PROMO_CODES[code], code };
         showPromoFeedback(`✓ ${appliedPromo.label} applied!`, "success");
         input.value = "";
         input.disabled = true;
@@ -237,10 +240,28 @@ function showPromoFeedback(msg, type) {
 // ─── CHECKOUT MODAL ─────────────────────────────────────
 
 /** Opens the checkout modal */
-function openCheckout() {
+async function openCheckout() {
+    if (getCart().length === 0) {
+        alert("Your bag is empty.");
+        return;
+    }
+
+    try {
+        const session = await fetch("/api/me");
+        if (!session.ok) {
+            alert("Please login before checkout.");
+            window.location.href = "/";
+            return;
+        }
+    } catch {
+        alert("Start the website with Node before checkout.");
+        return;
+    }
+
     document.getElementById("checkout-modal")?.classList.add("active");
     document.getElementById("checkout-backdrop")?.classList.add("active");
     document.body.classList.add("no-scroll");
+    await loadSavedAddresses();
 }
 
 /** Closes the checkout modal */
@@ -254,6 +275,114 @@ document.getElementById("checkout-btn")?.addEventListener("click", openCheckout)
 document.getElementById("checkout-close")?.addEventListener("click", closeCheckout);
 document.getElementById("checkout-backdrop")?.addEventListener("click", closeCheckout);
 
+// ─── SAVED ADDRESS UI ─────────────────────────
+
+async function loadSavedAddresses() {
+    const list = document.getElementById("address-list");
+    if (list) list.innerHTML = `<p class="address-empty">Loading saved addresses...</p>`;
+
+    try {
+        const response = await fetch("/api/addresses");
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "Could not load addresses");
+        }
+
+        savedAddresses = result.addresses || [];
+        const defaultAddress = savedAddresses.find(address => address.isDefault) || savedAddresses[0];
+        selectedAddressId = defaultAddress?.id || null;
+        addressMode = savedAddresses.length ? "saved" : "new";
+        renderAddressChooser();
+    } catch {
+        savedAddresses = [];
+        selectedAddressId = null;
+        addressMode = "new";
+        renderAddressChooser("Add a delivery address to continue.");
+    }
+}
+
+function renderAddressChooser(message = "") {
+    const list = document.getElementById("address-list");
+    const form = document.getElementById("address-form");
+    if (!list || !form) return;
+
+    if (!savedAddresses.length) {
+        list.innerHTML = `<p class="address-empty">${message || "No saved addresses yet."}</p>`;
+        form.classList.remove("is-hidden");
+        return;
+    }
+
+    list.innerHTML = savedAddresses.map(address => `
+        <label class="address-card ${address.id === selectedAddressId ? "selected" : ""}" data-address-id="${address.id}">
+            <input type="radio" name="selected-address" value="${address.id}" ${address.id === selectedAddressId ? "checked" : ""}>
+            <span>
+                <strong>${address.label}${address.isDefault ? " · DEFAULT" : ""}</strong>
+                <span>${address.fullName} · ${address.phone}</span>
+                <span>${[
+                    address.line1,
+                    address.line2,
+                    address.city,
+                    address.state,
+                    address.postalCode,
+                    address.country
+                ].filter(Boolean).join(", ")}</span>
+            </span>
+        </label>
+    `).join("");
+
+    list.querySelectorAll(".address-card").forEach(card => {
+        card.addEventListener("click", () => {
+            selectedAddressId = Number(card.dataset.addressId);
+            addressMode = "saved";
+            renderAddressChooser();
+        });
+    });
+
+    form.classList.toggle("is-hidden", addressMode === "saved");
+}
+
+function showNewAddressForm() {
+    addressMode = "new";
+    selectedAddressId = null;
+    renderAddressChooser();
+    document.getElementById("addr-name")?.focus();
+}
+
+function getAddressFormPayload() {
+    const value = id => document.getElementById(id)?.value.trim() || "";
+    return {
+        label: value("addr-label") || "Home",
+        fullName: value("addr-name"),
+        phone: value("addr-phone"),
+        line1: value("addr-line1"),
+        line2: value("addr-line2"),
+        city: value("addr-city"),
+        state: value("addr-state"),
+        postalCode: value("addr-postal"),
+        country: value("addr-country") || "India",
+        isDefault: savedAddresses.length === 0
+    };
+}
+
+function validateAddress(address) {
+    const missing = [];
+    if (!address.fullName) missing.push("full name");
+    if (!address.phone) missing.push("phone");
+    if (!address.line1) missing.push("address line");
+    if (!address.city) missing.push("city");
+    if (!address.state) missing.push("state");
+    if (!address.postalCode) missing.push("pincode");
+
+    if (missing.length) {
+        alert(`Please add ${missing.join(", ")}.`);
+        return false;
+    }
+    return true;
+}
+
+document.getElementById("new-address-btn")?.addEventListener("click", showNewAddressForm);
+
 // ─── DATABASE ORDER CHECKOUT ─────────────────────────────
 
 document.getElementById("mock-pay-btn")?.addEventListener("click", async () => {
@@ -266,6 +395,21 @@ document.getElementById("mock-pay-btn")?.addEventListener("click", async () => {
         return;
     }
 
+    const checkoutPayload = {
+        items: cart,
+        promo: appliedPromo?.label || null,
+        promoCode: appliedPromo?.code || null
+    };
+
+    if (addressMode === "saved" && selectedAddressId) {
+        checkoutPayload.addressId = selectedAddressId;
+    } else {
+        const address = getAddressFormPayload();
+        if (!validateAddress(address)) return;
+        checkoutPayload.address = address;
+        checkoutPayload.saveAddress = document.getElementById("addr-save")?.checked !== false;
+    }
+
     btn.textContent = "PLACING ORDER...";
     btn.disabled = true;
 
@@ -273,10 +417,7 @@ document.getElementById("mock-pay-btn")?.addEventListener("click", async () => {
         const response = await fetch("/api/orders/create", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                items: cart,
-                promo: appliedPromo?.label || null
-            })
+            body: JSON.stringify(checkoutPayload)
         });
 
         const result = await response.json();

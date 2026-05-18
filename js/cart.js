@@ -195,11 +195,24 @@ function updateAuthNav() {
         }
 
         trigger.classList.add("logged-in");
-        trigger.textContent = `HI ${user.name.toUpperCase()}`;
-        trigger.title = user.email || "";
+        trigger.textContent = `HI ${(user.name || "USER").toUpperCase().split(" ")[0]}`;
+        trigger.title = user.role === "admin" ? `${user.email} - open admin` : `${user.email} - click to logout`;
         if (trigger.tagName === "A") {
-            trigger.setAttribute("href", "#");
-            trigger.addEventListener("click", e => e.preventDefault(), { once:false });
+            if (user.role === "admin") {
+                trigger.setAttribute("href", "/admin");
+                trigger.onclick = null;
+            } else {
+                trigger.setAttribute("href", "#");
+                trigger.onclick = async e => {
+                    e.preventDefault();
+                    if (!confirm("You are logged in. Log out?")) return;
+                    try {
+                        await fetch("/api/logout", { method: "POST" });
+                    } catch { /* ignore */ }
+                    clearAuthUser();
+                    window.location.reload();
+                };
+            }
         }
     });
 }

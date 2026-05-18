@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODCORRECT | Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-page">
+    <nav class="compact-nav admin-nav">
+        <div class="nav-logo">
+            <img src="images/logo2.png" class="nav-logo-img" alt="ODCORRECT logo">
+            <span>ODCORRECT</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/shop">Shop</a></li>
+            <li><button class="login-trigger logged-in" id="admin-user-btn">ADMIN</button></li>
+        </ul>
+    </nav>
+
+    <main class="admin-shell">
+        <header class="admin-header">
+            <div>
+                <p class="admin-kicker">SYSTEM DASHBOARD</p>
+                <h1>Admin Control</h1>
+                <p class="admin-sub" id="admin-status">Checking access...</p>
+            </div>
+            <div class="admin-actions">
+                <button class="admin-ghost-btn" id="refresh-admin">Refresh</button>
+                <button class="admin-dark-btn" id="logout-admin">Logout</button>
+            </div>
+        </header>
+
+        <section class="admin-summary" id="admin-summary">
+            <div class="admin-stat">
+                <span class="stat-label">ORDERS</span>
+                <strong id="stat-orders">-</strong>
+            </div>
+            <div class="admin-stat">
+                <span class="stat-label">REVENUE</span>
+                <strong id="stat-revenue">-</strong>
+            </div>
+            <div class="admin-stat">
+                <span class="stat-label">CUSTOMERS</span>
+                <strong id="stat-users">-</strong>
+            </div>
+            <div class="admin-stat">
+                <span class="stat-label">PRODUCTS</span>
+                <strong id="stat-products">-</strong>
+            </div>
+        </section>
+
+        <section class="admin-tabs" aria-label="Admin sections">
+            <button class="admin-tab active" data-panel="orders-panel">Orders</button>
+            <button class="admin-tab" data-panel="products-panel">Products</button>
+            <button class="admin-tab" data-panel="users-panel">Customers</button>
+        </section>
+
+        <section class="admin-panel active" id="orders-panel">
+            <div class="panel-heading">
+                <h2>Orders</h2>
+                <p>Database orders from checkout.</p>
+            </div>
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Shipping</th>
+                            <th>Status</th>
+                            <th>Total</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table">
+                        <tr><td colspan="7">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="admin-panel" id="products-panel">
+            <div class="panel-heading">
+                <h2>Products</h2>
+                <p>Current product catalog in SQLite.</p>
+            </div>
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Badge</th>
+                            <th>Price</th>
+                            <th>Active</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-table">
+                        <tr><td colspan="6">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="admin-panel" id="users-panel">
+            <div class="panel-heading">
+                <h2>Customers</h2>
+                <p>Registered users and account totals.</p>
+            </div>
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Orders</th>
+                            <th>Total Spent</th>
+                            <th>Joined</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table">
+                        <tr><td colspan="6">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>

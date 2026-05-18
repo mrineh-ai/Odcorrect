@@ -344,8 +344,13 @@ document.querySelector(".add-bag-btn")?.addEventListener("click", () => {
 
 // ─── 10. LOGIN MODAL ─────────────────────────
 function openLogin() {
-    if (getAuthUser()) {
-        // If already logged in, clicking triggers logout confirm
+    const user = getAuthUser();
+    if (user) {
+        if (user.role === "admin") {
+            window.location.href = "/admin";
+            return;
+        }
+
         if (confirm("You are logged in. Log out?")) handleLogout();
         return;
     }
@@ -554,7 +559,9 @@ function updateAuthNav() {
         } else {
             trigger.classList.add("logged-in");
             trigger.textContent = `HI ${(user.name || "USER").toUpperCase().split(" ")[0]}`;
-            trigger.title = `${user.email} — click to logout`;
+            trigger.title = user.role === "admin"
+                ? `${user.email} — open admin`
+                : `${user.email} — click to logout`;
         }
     });
 }

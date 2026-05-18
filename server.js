@@ -17,7 +17,8 @@ const ROUTES = {
     "/home": "index.html",
     "/shop": "shop.html",
     "/product": "product.html",
-    "/cart": "cart.html"
+    "/cart": "cart.html",
+    "/admin": "admin.html"
 };
 
 const MIME_TYPES = {
@@ -51,6 +52,12 @@ const PRODUCT_CATALOG = [
     { id:"OC_MN_004", name:"TECH FLEECE HALF-ZIP", cat:"men", price:2099, badge:"", color:"#1a2a2a", description:"Textured tech fleece for the engineering aesthetic." },
     { id:"OC_WM_004", name:"WIDE LEG SWEATS", cat:"women", price:1999, badge:"new", color:"#2a1a2a", description:"Ultra wide leg with elasticated waistband and OD tape." }
 ];
+
+const PROMO_CODES = {
+    RADHAWEDSMRINAL: { type: "percent", value: 100, label: "WEDDING GIFT - 100% OFF" },
+    ODLAUNCH: { type: "flat", value: 500, label: "ODLAUNCH - Rs.500 OFF" },
+    SUPERCOOL: { type: "percent", value: 15, label: "SUPERCOOL - 15% OFF" }
+};
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
 const db = new DatabaseSync(DB_PATH);
@@ -90,17 +97,46 @@ function initDatabase() {
             updated_at INTEGER NOT NULL
         );
 
+        CREATE TABLE IF NOT EXISTS addresses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            label TEXT NOT NULL DEFAULT 'Home',
+            full_name TEXT NOT NULL,
+            phone TEXT NOT NULL,
+            line1 TEXT NOT NULL,
+            line2 TEXT,
+            city TEXT NOT NULL,
+            state TEXT NOT NULL,
+            postal_code TEXT NOT NULL,
+            country TEXT NOT NULL DEFAULT 'India',
+            is_default INTEGER NOT NULL DEFAULT 0,
+            created_at INTEGER NOT NULL,
+            updated_at INTEGER NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        );
+
         CREATE TABLE IF NOT EXISTS orders (
             id TEXT PRIMARY KEY,
             user_id INTEGER NOT NULL,
+            address_id INTEGER,
+            shipping_name TEXT,
+            shipping_phone TEXT,
+            shipping_line1 TEXT,
+            shipping_line2 TEXT,
+            shipping_city TEXT,
+            shipping_state TEXT,
+            shipping_postal_code TEXT,
+            shipping_country TEXT,
             subtotal INTEGER NOT NULL,
+            discount INTEGER NOT NULL DEFAULT 0,
             tax INTEGER NOT NULL,
             shipping INTEGER NOT NULL,
             total INTEGER NOT NULL,
             promo TEXT,
             status TEXT NOT NULL DEFAULT 'placed',
             created_at INTEGER NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (address_id) REFERENCES addresses(id) ON DELETE SET NULL
         );
 
         CREATE TABLE IF NOT EXISTS order_items (
@@ -118,8 +154,34 @@ function initDatabase() {
         );
     `);
 
+    migrateDatabase();
     seedAdminUser();
     seedProducts();
+}
+
+function migrateDatabase() {
+    const orderColumns = new Set(
+        db.prepare("PRAGMA table_info(orders)").all().map(column => column.name)
+    );
+
+    const additions = [
+        ["address_id", "INTEGER"],
+        ["shipping_name", "TEXT"],
+        ["shipping_phone", "TEXT"],
+        ["shipping_line1", "TEXT"],
+        ["shipping_line2", "TEXT"],
+        ["shipping_city", "TEXT"],
+        ["shipping_state", "TEXT"],
+        ["shipping_postal_code", "TEXT"],
+        ["shipping_country", "TEXT"],
+        ["discount", "INTEGER NOT NULL DEFAULT 0"]
+    ];
+
+    for (const [name, type] of additions) {
+        if (!orderColumns.has(name)) {
+            db.exec(`ALTER TABLE orders ADD COLUMN ${name} ${type}`);
+        }
+    }
 }
 
 function seedAdminUser() {
@@ -235,6 +297,116 @@ function publicUser(user) {
         email: user.email,
         role: user.role
     };
+}
+
+function requireAdmin(req, res) {
+    const user = getSessionUser(req);
+
+    if (!user) {
+        sendJson(res, 401, { success: false, message: "Please login first" });
+        return null;
+    }
+
+    if (user.role !== "admin") {
+        sendJson(res, 403, { success: false, message: "Admin access only" });
+        return null;
+    }
+
+    return user;
+}
+
+function requireUser(req, res) {
+    const user = getSessionUser(req);
+
+    if (!user) {
+        sendJson(res, 401, { success: false, message: "Please login first" });
+        return null;
+    }
+
+    return user;
+}
+
+function addressPayload(row) {
+    return {
+        id: row.id,
+        label: row.label,
+        fullName: row.full_name,
+        phone: row.phone,
+        line1: row.line1,
+        line2: row.line2 || "",
+        city: row.city,
+        state: row.state,
+        postalCode: row.postal_code,
+        country: row.country,
+        isDefault: Boolean(row.is_default)
+    };
+}
+
+function normalizeAddress(input) {
+    const address = {
+        label: String(input.label || "Home").trim().slice(0, 40) || "Home",
+        fullName: String(input.fullName || input.full_name || "").trim().slice(0, 80),
+        phone: String(input.phone || "").trim().slice(0, 24),
+        line1: String(input.line1 || "").trim().slice(0, 140),
+        line2: String(input.line2 || "").trim().slice(0, 140),
+        city: String(input.city || "").trim().slice(0, 80),
+        state: String(input.state || "").trim().slice(0, 80),
+        postalCode: String(input.postalCode || input.postal_code || "").trim().slice(0, 20),
+        country: String(input.country || "India").trim().slice(0, 60) || "India",
+        isDefault: input.isDefault === true || input.is_default === 1
+    };
+
+    if (
+        !address.fullName ||
+        !address.phone ||
+        !address.line1 ||
+        !address.city ||
+        !address.state ||
+        !address.postalCode
+    ) {
+        return null;
+    }
+
+    return address;
+}
+
+function insertAddress(userId, address) {
+    const now = Date.now();
+
+    if (address.isDefault) {
+        db.prepare("UPDATE addresses SET is_default = 0 WHERE user_id = ?").run(userId);
+    }
+
+    const result = db.prepare(`
+        INSERT INTO addresses
+            (user_id, label, full_name, phone, line1, line2, city, state, postal_code, country, is_default, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+        userId,
+        address.label,
+        address.fullName,
+        address.phone,
+        address.line1,
+        address.line2,
+        address.city,
+        address.state,
+        address.postalCode,
+        address.country,
+        address.isDefault ? 1 : 0,
+        now,
+        now
+    );
+
+    const count = db.prepare("SELECT COUNT(*) AS count FROM addresses WHERE user_id = ?").get(userId).count;
+    if (count === 1) {
+        db.prepare("UPDATE addresses SET is_default = 1 WHERE id = ?").run(result.lastInsertRowid);
+    }
+
+    return db.prepare("SELECT * FROM addresses WHERE id = ?").get(result.lastInsertRowid);
+}
+
+function getOwnedAddress(userId, id) {
+    return db.prepare("SELECT * FROM addresses WHERE id = ? AND user_id = ?").get(Number(id), userId) || null;
 }
 
 function readJsonBody(req) {
@@ -395,6 +567,106 @@ async function handleApi(req, res, url) {
         return true;
     }
 
+    if (req.method === "GET" && url.pathname === "/api/addresses") {
+        const user = requireUser(req, res);
+        if (!user) return true;
+
+        const addresses = db.prepare(`
+            SELECT *
+            FROM addresses
+            WHERE user_id = ?
+            ORDER BY is_default DESC, updated_at DESC
+        `).all(user.id).map(addressPayload);
+
+        sendJson(res, 200, { success: true, addresses });
+        return true;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/addresses") {
+        const user = requireUser(req, res);
+        if (!user) return true;
+
+        const body = await readJsonBody(req);
+        const address = normalizeAddress(body);
+
+        if (!address) {
+            sendJson(res, 400, { success: false, message: "Complete shipping address required" });
+            return true;
+        }
+
+        const row = insertAddress(user.id, address);
+        sendJson(res, 201, { success: true, address: addressPayload(row) });
+        return true;
+    }
+
+    if (url.pathname.startsWith("/api/addresses/")) {
+        const user = requireUser(req, res);
+        if (!user) return true;
+
+        const id = Number(decodeURIComponent(url.pathname.replace("/api/addresses/", "")));
+        const existing = getOwnedAddress(user.id, id);
+
+        if (!existing) {
+            sendJson(res, 404, { success: false, message: "Address not found" });
+            return true;
+        }
+
+        if (req.method === "PUT") {
+            const body = await readJsonBody(req);
+            const address = normalizeAddress(body);
+
+            if (!address) {
+                sendJson(res, 400, { success: false, message: "Complete shipping address required" });
+                return true;
+            }
+
+            if (address.isDefault) {
+                db.prepare("UPDATE addresses SET is_default = 0 WHERE user_id = ?").run(user.id);
+            }
+
+            db.prepare(`
+                UPDATE addresses
+                SET label = ?, full_name = ?, phone = ?, line1 = ?, line2 = ?, city = ?,
+                    state = ?, postal_code = ?, country = ?, is_default = ?, updated_at = ?
+                WHERE id = ? AND user_id = ?
+            `).run(
+                address.label,
+                address.fullName,
+                address.phone,
+                address.line1,
+                address.line2,
+                address.city,
+                address.state,
+                address.postalCode,
+                address.country,
+                address.isDefault ? 1 : existing.is_default,
+                Date.now(),
+                id,
+                user.id
+            );
+
+            const updated = getOwnedAddress(user.id, id);
+            sendJson(res, 200, { success: true, address: addressPayload(updated) });
+            return true;
+        }
+
+        if (req.method === "DELETE") {
+            db.prepare("DELETE FROM addresses WHERE id = ? AND user_id = ?").run(id, user.id);
+            const fallback = db.prepare(`
+                SELECT id
+                FROM addresses
+                WHERE user_id = ?
+                ORDER BY updated_at DESC
+                LIMIT 1
+            `).get(user.id);
+            if (existing.is_default && fallback) {
+                db.prepare("UPDATE addresses SET is_default = 1 WHERE id = ?").run(fallback.id);
+            }
+            sendJson(res, 200, { success: true });
+            return true;
+        }
+    }
+
     if (req.method === "GET" && url.pathname === "/api/products") {
         const products = db.prepare(`
             SELECT id, name, category AS cat, price, badge, color, description AS desc
@@ -436,6 +708,41 @@ async function handleApi(req, res, url) {
             return true;
         }
 
+        let shippingAddress = null;
+
+        if (body.addressId) {
+            shippingAddress = getOwnedAddress(user.id, body.addressId);
+            if (!shippingAddress) {
+                sendJson(res, 400, { success: false, message: "Selected address was not found" });
+                return true;
+            }
+        } else {
+            const normalizedAddress = normalizeAddress(body.address || {});
+            if (!normalizedAddress) {
+                sendJson(res, 400, { success: false, message: "Shipping address required" });
+                return true;
+            }
+
+            if (body.saveAddress !== false) {
+                shippingAddress = insertAddress(user.id, {
+                    ...normalizedAddress,
+                    isDefault: normalizedAddress.isDefault || body.makeDefault === true
+                });
+            } else {
+                shippingAddress = {
+                    id: null,
+                    full_name: normalizedAddress.fullName,
+                    phone: normalizedAddress.phone,
+                    line1: normalizedAddress.line1,
+                    line2: normalizedAddress.line2,
+                    city: normalizedAddress.city,
+                    state: normalizedAddress.state,
+                    postal_code: normalizedAddress.postalCode,
+                    country: normalizedAddress.country
+                };
+            }
+        }
+
         const orderLines = [];
         let subtotal = 0;
 
@@ -462,18 +769,53 @@ async function handleApi(req, res, url) {
             return true;
         }
 
-        const tax = Math.round(subtotal * 0.18);
-        const shipping = subtotal >= 999 ? 0 : 99;
-        const total = subtotal + tax + shipping;
+        const promoCode = String(body.promoCode || "").trim().toUpperCase();
+        const promoDef = PROMO_CODES[promoCode] || null;
+        let discount = 0;
+
+        if (promoDef) {
+            discount = promoDef.type === "percent"
+                ? Math.round(subtotal * promoDef.value / 100)
+                : Math.min(promoDef.value, subtotal);
+        }
+
+        const discountedSubtotal = subtotal - discount;
+        const tax = Math.round(discountedSubtotal * 0.18);
+        const shipping = discountedSubtotal >= 999 ? 0 : 99;
+        const total = discountedSubtotal + tax + shipping;
         const orderId = `OD-${Date.now().toString(36).toUpperCase()}`;
-        const promo = body.promo ? String(body.promo).slice(0, 80) : null;
+        const promo = promoDef ? promoDef.label : (body.promo ? String(body.promo).slice(0, 80) : null);
 
         db.exec("BEGIN");
         try {
             db.prepare(`
-                INSERT INTO orders (id, user_id, subtotal, tax, shipping, total, promo, status, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, 'placed', ?)
-            `).run(orderId, user.id, subtotal, tax, shipping, total, promo, Date.now());
+                INSERT INTO orders (
+                    id, user_id, address_id,
+                    shipping_name, shipping_phone, shipping_line1, shipping_line2,
+                    shipping_city, shipping_state, shipping_postal_code, shipping_country,
+                    subtotal, discount, tax, shipping, total, promo, status, created_at
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'placed', ?)
+            `).run(
+                orderId,
+                user.id,
+                shippingAddress.id,
+                shippingAddress.full_name,
+                shippingAddress.phone,
+                shippingAddress.line1,
+                shippingAddress.line2,
+                shippingAddress.city,
+                shippingAddress.state,
+                shippingAddress.postal_code,
+                shippingAddress.country,
+                subtotal,
+                discount,
+                tax,
+                shipping,
+                total,
+                promo,
+                Date.now()
+            );
 
             const itemStmt = db.prepare(`
                 INSERT INTO order_items
@@ -505,10 +847,17 @@ async function handleApi(req, res, url) {
             order: {
                 id: orderId,
                 subtotal,
+                discount,
                 tax,
                 shipping,
                 total,
-                status: "placed"
+                status: "placed",
+                address: {
+                    fullName: shippingAddress.full_name,
+                    city: shippingAddress.city,
+                    state: shippingAddress.state,
+                    postalCode: shippingAddress.postal_code
+                }
             }
         });
         return true;
@@ -522,13 +871,130 @@ async function handleApi(req, res, url) {
         }
 
         const orders = db.prepare(`
-            SELECT id, subtotal, tax, shipping, total, promo, status, created_at
+            SELECT
+                id,
+                subtotal,
+                discount,
+                tax,
+                shipping,
+                total,
+                promo,
+                status,
+                created_at,
+                shipping_name,
+                shipping_phone,
+                shipping_line1,
+                shipping_line2,
+                shipping_city,
+                shipping_state,
+                shipping_postal_code,
+                shipping_country
             FROM orders
             WHERE user_id = ?
             ORDER BY created_at DESC
         `).all(user.id);
 
         sendJson(res, 200, { success: true, orders });
+        return true;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/admin/summary") {
+        const admin = requireAdmin(req, res);
+        if (!admin) return true;
+
+        const users = db.prepare("SELECT COUNT(*) AS count FROM users").get().count;
+        const products = db.prepare("SELECT COUNT(*) AS count FROM products WHERE active = 1").get().count;
+        const orders = db.prepare("SELECT COUNT(*) AS count FROM orders").get().count;
+        const revenue = db.prepare("SELECT COALESCE(SUM(total), 0) AS total FROM orders").get().total;
+
+        sendJson(res, 200, {
+            success: true,
+            summary: { users, products, orders, revenue }
+        });
+        return true;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/admin/orders") {
+        const admin = requireAdmin(req, res);
+        if (!admin) return true;
+
+        const orders = db.prepare(`
+            SELECT
+                orders.id,
+                orders.subtotal,
+                orders.discount,
+                orders.tax,
+                orders.shipping,
+                orders.total,
+                orders.promo,
+                orders.status,
+                orders.created_at,
+                orders.shipping_name,
+                orders.shipping_phone,
+                orders.shipping_line1,
+                orders.shipping_line2,
+                orders.shipping_city,
+                orders.shipping_state,
+                orders.shipping_postal_code,
+                orders.shipping_country,
+                users.name AS customer_name,
+                users.email AS customer_email
+            FROM orders
+            JOIN users ON users.id = orders.user_id
+            ORDER BY orders.created_at DESC
+        `).all();
+
+        const itemStmt = db.prepare(`
+            SELECT product_id, name, size, color_name, quantity, unit_price, line_total
+            FROM order_items
+            WHERE order_id = ?
+            ORDER BY id ASC
+        `);
+
+        sendJson(res, 200, {
+            success: true,
+            orders: orders.map(order => ({
+                ...order,
+                items: itemStmt.all(order.id)
+            }))
+        });
+        return true;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/admin/products") {
+        const admin = requireAdmin(req, res);
+        if (!admin) return true;
+
+        const products = db.prepare(`
+            SELECT id, name, category AS cat, price, badge, color, description AS desc, active, updated_at
+            FROM products
+            ORDER BY updated_at DESC, id ASC
+        `).all();
+
+        sendJson(res, 200, { success: true, products });
+        return true;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/admin/users") {
+        const admin = requireAdmin(req, res);
+        if (!admin) return true;
+
+        const users = db.prepare(`
+            SELECT
+                users.id,
+                users.name,
+                users.email,
+                users.role,
+                users.created_at,
+                COUNT(orders.id) AS order_count,
+                COALESCE(SUM(orders.total), 0) AS total_spent
+            FROM users
+            LEFT JOIN orders ON orders.user_id = users.id
+            GROUP BY users.id
+            ORDER BY users.created_at DESC
+        `).all();
+
+        sendJson(res, 200, { success: true, users });
         return true;
     }
 

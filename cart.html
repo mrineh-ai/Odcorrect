@@ -149,23 +149,40 @@
             </svg>
         </button>
         <div class="checkout-modal-inner">
-            <p class="checkout-sys-tag">SYSTEM: PAYMENT_MODULE</p>
+            <p class="checkout-sys-tag">SYSTEM: CHECKOUT_MODULE</p>
             <h2 class="checkout-modal-title">CHECKOUT</h2>
-            <p class="checkout-modal-sub">Your order will be saved to the ODCORRECT database.</p>
+            <p class="checkout-modal-sub">Choose a saved delivery address or add a new one before placing your order.</p>
 
-            <div class="checkout-info-grid">
-                <div class="checkout-info-item">
-                    <span class="ci-label">ENDPOINT</span>
-                    <span class="ci-val">POST /api/orders/create</span>
+            <div class="checkout-address-block">
+                <div class="checkout-address-head">
+                    <span class="checkout-total-label">DELIVERY ADDRESS</span>
+                    <button class="mini-link-btn" id="new-address-btn" type="button">NEW ADDRESS</button>
                 </div>
-                <div class="checkout-info-item">
-                    <span class="ci-label">PAYLOAD</span>
-                    <span class="ci-val">cart[] + logged-in user</span>
+                <div class="address-list" id="address-list">
+                    <p class="address-empty">Login first to load saved addresses.</p>
                 </div>
-                <div class="checkout-info-item">
-                    <span class="ci-label">PAYMENT</span>
-                    <span class="ci-val">Database order now / payment gateway later</span>
-                </div>
+
+                <form class="address-form" id="address-form">
+                    <div class="form-row two">
+                        <input type="text" id="addr-label" placeholder="LABEL (HOME/OFFICE)" value="Home">
+                        <input type="text" id="addr-name" placeholder="FULL NAME" autocomplete="name">
+                    </div>
+                    <input type="tel" id="addr-phone" placeholder="PHONE NUMBER" autocomplete="tel">
+                    <input type="text" id="addr-line1" placeholder="ADDRESS LINE 1" autocomplete="address-line1">
+                    <input type="text" id="addr-line2" placeholder="ADDRESS LINE 2 (OPTIONAL)" autocomplete="address-line2">
+                    <div class="form-row two">
+                        <input type="text" id="addr-city" placeholder="CITY" autocomplete="address-level2">
+                        <input type="text" id="addr-state" placeholder="STATE" autocomplete="address-level1">
+                    </div>
+                    <div class="form-row two">
+                        <input type="text" id="addr-postal" placeholder="PINCODE" autocomplete="postal-code">
+                        <input type="text" id="addr-country" placeholder="COUNTRY" value="India" autocomplete="country-name">
+                    </div>
+                    <label class="save-address-check">
+                        <input type="checkbox" id="addr-save" checked>
+                        <span>Save this address for next time</span>
+                    </label>
+                </form>
             </div>
 
             <div class="checkout-total-display">
