@@ -1,3 +1,29 @@
+/* ── Missing @keyframes (defined in style.css but needed here too) ── */
+@keyframes revealUp {
+    from { opacity: 0; transform: translateY(32px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Reveal: fire immediately on elements near top of viewport ── */
+/* JS calls reveal() twice on DOMContentLoaded so .active is added quickly */
+.reveal {
+    transition: opacity .7s cubic-bezier(.2,1,.3,1), transform .7s cubic-bezier(.2,1,.3,1);
+}
+
+/* Panel "View Full Page" link */
+.ghost-panel-link {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    color: var(--accent);
+    font-size: .65rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-decoration: none;
+    transition: opacity .2s;
+}
+.ghost-panel-link:hover { opacity: .7; }
+
 /* ═══════════════════════════════════════════════
    ODCORRECT — shop.css
    Styles for shop.html (product grid page)

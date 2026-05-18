@@ -1,67 +1,70 @@
 // ══════════════════════════════════════════════
-//  ODCORRECT MASTER ENGINE  v4 (Updated)
-//  [Optimized for Spline Robot Integration]
+//  ODCORRECT MASTER ENGINE  v5
+//  Fixed: login wired to API, register tab,
+//  API product fetch, auth nav, logout
 // ══════════════════════════════════════════════
 
-// ─── PRODUCT DATA ─────────────────────────────
+// ─── PRODUCT DATA (fallback while API loads) ──
 let PRODUCTS = [
-    { id:"OC_MN_001", name:"OVERSIZED TEE",    cat:"men",      price:"₹1,299", badge:"new",  color:"#1d1d1f", desc:"Heavyweight 450gsm oversized tee with architectural silhouette." },
-    { id:"OC_WM_001", name:"CROP HOODIE",      cat:"women",    price:"₹1,899", badge:"new",  color:"#2d2d3a", desc:"Cropped hoodie with raw hem detailing and logo embroidery." },
-    { id:"OC_MN_002", name:"CORE JOGGER SET",         cat:"men",      price:"₹2,499", badge:"",     color:"#3a3a3a", desc:"Matching heavyweight joggers with engineering-grade stitching." },
-    { id:"OC_WM_002", name:"REVERSE WEAVE HOODIE",   cat:"women",    price:"₹2,199", badge:"",     color:"#2a3520", desc:"Reverse weave construction for maximum shape retention." },
-    { id:"OC_BB_001", name:"MINI TEE",          cat:"baby",     price:"₹699",   badge:"new",  color:"#1d3a2a", desc:"Soft 200gsm baby tee in RADHA collection colorways." },
-    { id:"OC_BG_001", name:"BABY DRESS",        cat:"baby",     price:"₹799",   badge:"new",  color:"#3a1d2a", desc:"Tiny dress with OD branding for the next generation." },
-    { id:"OC_HF_001", name:"OD LOW RUNNER",           cat:"footwear", price:"₹3,999", badge:"",     color:"#1d2a3a", desc:"Low-profile runner with chunky outsole and OD tab." },
-    { id:"OC_HF_002", name:"PLATFORM SLIDE",   cat:"footwear", price:"₹1,699", badge:"sold", color:"#2a1d1d", desc:"Platform slide in premium moulded rubber. Sold out." },
-    { id:"OC_MN_003", name:"COACH JACKET",            cat:"men",      price:"₹3,499", badge:"",     color:"#1a1a2a", desc:"Satin-finish coach jacket with embroidered ODCORRECT badge." },
-    { id:"OC_WM_003", name:"UTILITY CARGOS",          cat:"women",    price:"₹2,799", badge:"",     color:"#2a2a1a", desc:"Six-pocket utility pants with tonal OD hardware." },
-    { id:"OC_MN_004", name:"TECH FLEECE HALF-ZIP",   cat:"men",      price:"₹2,099", badge:"",     color:"#1a2a2a", desc:"Textured tech fleece for the engineering aesthetic." },
-    { id:"OC_WM_004", name:"WIDE LEG SWEATS",         cat:"women",    price:"₹1,999", badge:"new",  color:"#2a1a2a", desc:"Ultra wide leg with elasticated waistband and OD tape." }
+    { id:"OC_MN_001", name:"OVERSIZED TEE",         cat:"men",      price:"₹1,299", priceNum:1299, badge:"new",  color:"#1d1d1f", desc:"Heavyweight 450gsm oversized tee with architectural silhouette." },
+    { id:"OC_WM_001", name:"CROP HOODIE",            cat:"women",    price:"₹1,899", priceNum:1899, badge:"new",  color:"#2d2d3a", desc:"Cropped hoodie with raw hem detailing and logo embroidery." },
+    { id:"OC_MN_002", name:"CORE JOGGER SET",        cat:"men",      price:"₹2,499", priceNum:2499, badge:"",     color:"#3a3a3a", desc:"Matching heavyweight joggers with engineering-grade stitching." },
+    { id:"OC_WM_002", name:"REVERSE WEAVE HOODIE",   cat:"women",    price:"₹2,199", priceNum:2199, badge:"",     color:"#2a3520", desc:"Reverse weave construction for maximum shape retention." },
+    { id:"OC_BB_001", name:"MINI TEE",               cat:"baby",     price:"₹699",   priceNum:699,  badge:"new",  color:"#1d3a2a", desc:"Soft 200gsm baby tee in RADHA collection colorways." },
+    { id:"OC_BG_001", name:"BABY DRESS",             cat:"baby",     price:"₹799",   priceNum:799,  badge:"new",  color:"#3a1d2a", desc:"Tiny dress with OD branding for the next generation." },
+    { id:"OC_HF_001", name:"OD LOW RUNNER",          cat:"footwear", price:"₹3,999", priceNum:3999, badge:"",     color:"#1d2a3a", desc:"Low-profile runner with chunky outsole and OD tab." },
+    { id:"OC_HF_002", name:"PLATFORM SLIDE",         cat:"footwear", price:"₹1,699", priceNum:1699, badge:"sold", color:"#2a1d1d", desc:"Platform slide in premium moulded rubber. Sold out." },
+    { id:"OC_MN_003", name:"COACH JACKET",           cat:"men",      price:"₹3,499", priceNum:3499, badge:"",     color:"#1a1a2a", desc:"Satin-finish coach jacket with embroidered ODCORRECT badge." },
+    { id:"OC_WM_003", name:"UTILITY CARGOS",         cat:"women",    price:"₹2,799", priceNum:2799, badge:"",     color:"#2a2a1a", desc:"Six-pocket utility pants with tonal OD hardware." },
+    { id:"OC_MN_004", name:"TECH FLEECE HALF-ZIP",   cat:"men",      price:"₹2,099", priceNum:2099, badge:"",     color:"#1a2a2a", desc:"Textured tech fleece for the engineering aesthetic." },
+    { id:"OC_WM_004", name:"WIDE LEG SWEATS",        cat:"women",    price:"₹1,999", priceNum:1999, badge:"new",  color:"#2a1a2a", desc:"Ultra wide leg with elasticated waistband and OD tape." }
 ];
 
-// Category initials for geometric placeholders
 const CAT_LABELS = { men:"M", women:"W", baby:"B", footwear:"F" };
+const AUTH_KEY   = "odcorrect_user";
 
 function formatPriceDisplay(amount) {
     return "₹" + Number(amount || 0).toLocaleString("en-IN");
 }
 
+// Normalize API product shape to match local shape
 function normalizeApiProduct(p) {
     const priceNum = Number(p.priceNum ?? p.price ?? 0);
     return {
         ...p,
-        cat: p.cat || p.category || "men",
-        price: typeof p.price === "string" ? p.price : formatPriceDisplay(priceNum),
-        color: p.color || "#1d1d1f",
-        desc: p.desc || p.description || ""
+        cat:      p.cat || p.category || "men",
+        price:    typeof p.price === "string" ? p.price : formatPriceDisplay(priceNum),
+        priceNum: priceNum,
+        color:    p.color || "#1d1d1f",
+        desc:     p.desc || p.description || ""
     };
 }
 
+// ─── FETCH PRODUCTS FROM SERVER ───────────────
 async function loadHomeProductsFromApi() {
     try {
         const response = await fetch("/api/products");
         if (!response.ok) return;
-
         const result = await response.json();
         if (result.success && Array.isArray(result.products)) {
             PRODUCTS = result.products.map(normalizeApiProduct);
         }
     } catch {
-        // Keep bundled product data as fallback.
+        // Falls back to hardcoded PRODUCTS above
     }
 }
 
+// ─── STATE ────────────────────────────────────
 let portalTimerInterval = null;
-let bagCount = 0;
 let pwVisible = false;
 let bubbleTimer = null;
+let loginMode = "login"; // "login" | "register"
 
 // ─── DOM REFS ─────────────────────────────────
 const bubble     = document.getElementById("char-bubble");
 const bubbleTxt  = document.getElementById("char-bubble-text");
 const pwInput    = document.getElementById("login-password");
 const emailInput = document.getElementById("login-email");
-const AUTH_KEY   = "odcorrect_user";
 
 // ─── 1. WIN LIGHT EFFECT ──────────────────────
 function initWindowsEffect() {
@@ -74,14 +77,25 @@ function initWindowsEffect() {
     });
 }
 
-// ─── 2. SCROLL REVEAL ────────────────────────
+// ─── 2. SCROLL + IMMEDIATE REVEAL ─────────────
 function reveal() {
     document.querySelectorAll(".reveal").forEach(el => {
-        if (el.getBoundingClientRect().top < window.innerHeight - 80)
+        if (el.getBoundingClientRect().top < window.innerHeight - 60)
             el.classList.add("active");
     });
 }
 window.addEventListener("scroll", reveal, { passive:true });
+// Also fire immediately so above-fold elements animate in
+function revealAll() {
+    reveal();
+    // Force reveal anything still invisible after 100ms
+    setTimeout(() => {
+        document.querySelectorAll(".reveal:not(.active)").forEach(el => {
+            if (el.getBoundingClientRect().top < window.innerHeight + 100)
+                el.classList.add("active");
+        });
+    }, 100);
+}
 
 // ─── 3. HERO BG TRACKING ─────────────────────
 document.addEventListener("mousemove", e => {
@@ -125,47 +139,40 @@ window.addEventListener("DOMContentLoaded", async () => {
     initWindowsEffect();
     spawnIntroParticles();
     initPortalParticles();
+
+    // Load live products from backend, then render
     await loadHomeProductsFromApi();
     renderProducts("all");
     initFilters();
+
+    // Auth
     updateAuthNav();
     syncAuthFromServer();
 
+    // Dismiss intro
     setTimeout(() => {
         intro?.classList.add("intro-hidden");
         document.body.classList.remove("no-scroll");
         document.querySelectorAll(".reveal-up").forEach(el => {
             el.style.animationPlayState = "running";
         });
-        setTimeout(reveal, 200);
+        revealAll();
     }, 3800);
 });
 
 // ─── 5. NAV BEHAVIOR ─────────────────────────
 let lastScroll = 0;
-
 window.addEventListener("scroll", () => {
     const nav = document.querySelector(".compact-nav");
     if (!nav) return;
-
-    const currentScroll = window.scrollY;
-
-    nav.style.boxShadow = currentScroll > 40
+    const cur = window.scrollY;
+    nav.style.boxShadow = cur > 40
         ? "0 8px 40px rgba(0,0,0,.13), 0 1px 0 rgba(255,255,255,.9) inset"
         : "0 4px 24px rgba(0,0,0,.08), 0 1px 0 rgba(255,255,255,.9) inset";
-
-    if (currentScroll <= 0) {
-        nav.classList.remove("nav-hidden");
-        return;
-    }
-
-    if (currentScroll > lastScroll && currentScroll > 80) {
-        nav.classList.add("nav-hidden");
-    } else {
-        nav.classList.remove("nav-hidden");
-    }
-
-    lastScroll = currentScroll;
+    if (cur <= 0) { nav.classList.remove("nav-hidden"); return; }
+    if (cur > lastScroll && cur > 80) nav.classList.add("nav-hidden");
+    else nav.classList.remove("nav-hidden");
+    lastScroll = cur;
 }, { passive: true });
 
 // ─── 6. PORTAL ──────────────────────────────
@@ -202,7 +209,6 @@ function openPortal(cat) {
     overlay?.classList.remove("portal-burst");
     requestAnimationFrame(() => overlay?.classList.add("portal-burst"));
     document.body.classList.add("no-scroll");
-
     const total = 3;
     let count = total;
     const circumference = 2 * Math.PI * 42;
@@ -214,7 +220,6 @@ function openPortal(cat) {
         arc.style.transition = `stroke-dashoffset ${total}s linear`;
         arc.style.strokeDashoffset = circumference;
     }
-
     clearInterval(portalTimerInterval);
     portalTimerInterval = setInterval(() => {
         count -= 1;
@@ -226,13 +231,11 @@ function openPortal(cat) {
         }
     }, 1000);
 }
-
 function closePortal() {
     clearInterval(portalTimerInterval);
     document.getElementById("portal-overlay")?.classList.remove("active");
     document.body.classList.remove("no-scroll");
 }
-
 document.getElementById("portal-close")?.addEventListener("click", closePortal);
 document.getElementById("portal-overlay")?.addEventListener("click", e => {
     if (e.target.id === "portal-overlay") closePortal();
@@ -250,7 +253,7 @@ function renderProducts(filter) {
         card.className = "product-card";
         card.style.animationDelay = `${i * 0.055}s`;
         card.innerHTML = `
-            <div class="product-img-wrap">
+            <div class="product-img-wrap" onclick="location.href='product.html?id=${p.id}'">
                 <div class="product-img-block" style="background:${p.color}">
                     ${CAT_LABELS[p.cat] || "OD"}
                 </div>
@@ -277,7 +280,6 @@ function initFilters() {
         btn.addEventListener("click", () => filterCategory(btn.dataset.cat));
     });
 }
-
 function filterCategory(cat) {
     const catMap = { "men":"men","women":"women","baby-boy":"baby","baby-girl":"baby","her-footwear":"footwear","his-footwear":"footwear","all":"all" };
     const filterCat = catMap[cat] || cat;
@@ -306,7 +308,6 @@ function openPanel(productId) {
     document.getElementById("overlay-title").textContent = product.name;
     document.getElementById("overlay-price").textContent = product.price;
     document.getElementById("overlay-desc").textContent  = product.desc;
-
     const imgEl = document.getElementById("overlay-img");
     if (imgEl) {
         imgEl.style.display = "none";
@@ -338,15 +339,17 @@ document.querySelectorAll(".size-btn").forEach(btn => {
     });
 });
 document.querySelector(".add-bag-btn")?.addEventListener("click", () => {
-    const el = document.querySelector(".bag-count");
-    bagCount++;
-    if (el) { el.textContent = bagCount; el.style.transform = "scale(1.6)"; setTimeout(() => el.style.transform = "scale(1)", 220); }
     closePanel();
 });
 
-// ──��� 10. LOGIN ──────────────────────────────
+// ─── 10. LOGIN MODAL ─────────────────────────
 function openLogin() {
-    if (getAuthUser()) return;
+    if (getAuthUser()) {
+        // If already logged in, clicking triggers logout confirm
+        if (confirm("You are logged in. Log out?")) handleLogout();
+        return;
+    }
+    switchLoginMode("login");
     document.getElementById("login-modal")?.classList.add("active");
     document.getElementById("login-backdrop")?.classList.add("active");
     document.body.classList.add("no-scroll");
@@ -360,77 +363,114 @@ function closeLogin() {
 document.getElementById("open-login")?.addEventListener("click", openLogin);
 document.getElementById("login-close")?.addEventListener("click", closeLogin);
 document.getElementById("login-backdrop")?.addEventListener("click", closeLogin);
-
 document.addEventListener("keydown", e => {
     if (e.key === "Escape") { closePanel(); closePortal(); closeLogin(); }
 });
 
-function getAuthUser() {
-    try {
-        return JSON.parse(localStorage.getItem(AUTH_KEY));
-    } catch {
-        return null;
+// ─── 10b. LOGIN / REGISTER TABS ──────────────
+function switchLoginMode(mode) {
+    loginMode = mode;
+    const title    = document.getElementById("login-title");
+    const sub      = document.getElementById("login-sub");
+    const nameRow  = document.getElementById("login-name-row");
+    const submitBtn = document.querySelector("#login-form .login-btn span");
+    const footLink = document.getElementById("login-foot-link");
+    const footText = document.getElementById("login-foot-text");
+
+    if (mode === "register") {
+        if (title)    title.textContent    = "CREATE ACCOUNT";
+        if (sub)      sub.textContent      = "Join the ODCORRECT network";
+        if (nameRow)  nameRow.style.display = "flex";
+        if (submitBtn) submitBtn.textContent = "CREATE ACCOUNT";
+        if (footLink)  footLink.textContent  = "Sign in →";
+        if (footText)  footText.textContent  = "Already have an account? ";
+        showBubble("Let's get you set up! 🚀");
+    } else {
+        if (title)    title.textContent    = "SYSTEM LOGIN";
+        if (sub)      sub.textContent      = "Access your drops & order history";
+        if (nameRow)  nameRow.style.display = "none";
+        if (submitBtn) submitBtn.textContent = "AUTHENTICATE";
+        if (footLink)  footLink.textContent  = "Request Access →";
+        if (footText)  footText.textContent  = "New here? ";
+        showBubble("Hey! Welcome back 👋");
     }
 }
 
-function saveAuthUser(user) {
-    localStorage.setItem(AUTH_KEY, JSON.stringify(user));
-    updateAuthNav();
-}
+// Wire foot link to toggle mode
+document.getElementById("login-foot-link")?.addEventListener("click", e => {
+    e.preventDefault();
+    switchLoginMode(loginMode === "login" ? "register" : "login");
+});
 
-function clearAuthUser() {
-    localStorage.removeItem(AUTH_KEY);
-    updateAuthNav();
-}
+// ─── 10c. LOGIN FORM SUBMIT ──────────────────
+document.getElementById("login-form")?.addEventListener("submit", async e => {
+    e.preventDefault();
 
-async function syncAuthFromServer() {
+    const email    = document.getElementById("login-email")?.value.trim();
+    const password = document.getElementById("login-password")?.value;
+    const name     = document.getElementById("login-name")?.value.trim();
+    const btn      = document.querySelector("#login-form .login-btn");
+    const btnSpan  = btn?.querySelector("span");
+    const origText = btnSpan?.textContent;
+
+    if (!email || !password) { showBubble("Fill all fields first! 😅"); return; }
+    if (loginMode === "register" && !name) { showBubble("What's your name? 🤔"); return; }
+
+    showBubble("Authenticating... 🔐");
+    if (btnSpan) btnSpan.textContent = "...";
+    if (btn) btn.disabled = true;
+
     try {
-        const response = await fetch("/api/me");
-        if (!response.ok) {
-            clearAuthUser();
-            return;
-        }
+        const endpoint = loginMode === "register" ? "/api/register" : "/api/login";
+        const body = loginMode === "register"
+            ? { name, email, password }
+            : { email, password };
 
-        const result = await response.json();
-        if (result.success && result.user) {
+        const res = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
+        const result = await res.json();
+
+        if (result.success) {
             saveAuthUser(result.user);
+            showBubble("✅ Access granted! Welcome.");
+            setTimeout(() => {
+                closeLogin();
+                // Redirect to shop after login
+                if (window.location.pathname === "/" || window.location.pathname.includes("index")) {
+                    // Stay on homepage, just update nav
+                } else {
+                    window.location.reload();
+                }
+            }, 900);
         } else {
-            clearAuthUser();
+            showBubble(`❌ ${result.message || "Authentication failed"}`);
         }
     } catch {
-        updateAuthNav();
+        showBubble("Connection error — is the server running? 🔌");
+    } finally {
+        if (btnSpan) btnSpan.textContent = origText;
+        if (btn) btn.disabled = false;
     }
-}
+});
 
-function getDisplayName(email) {
-    const base = (email || "Admin").split("@")[0].replace(/[^a-z0-9]+/gi, " ").trim();
-    return base ? base.charAt(0).toUpperCase() + base.slice(1) : "Admin";
-}
-
-function updateAuthNav() {
-    const user = getAuthUser();
-    document.querySelectorAll(".login-trigger").forEach(trigger => {
-        if (!user) {
-            trigger.classList.remove("logged-in");
-            trigger.textContent = "LOGIN";
-            trigger.removeAttribute("title");
-            return;
-        }
-
-        trigger.classList.add("logged-in");
-        trigger.textContent = `HI ${user.name.toUpperCase()}`;
-        trigger.title = user.email || "";
-    });
+// ─── 10d. LOGOUT ─────────────────────────────
+async function handleLogout() {
+    try {
+        await fetch("/api/logout", { method: "POST" });
+    } catch { /* ignore */ }
+    clearAuthUser();
+    window.location.reload();
 }
 
 // ─── 11. SPEECH BUBBLE ──────────────────────
 function showBubble(text, delay = 0) {
     if (!bubble || !bubbleTxt) return;
     clearTimeout(bubbleTimer);
-
     bubble.style.opacity = "0";
     bubble.style.transform = "scale(.92) translateY(5px)";
-
     bubbleTimer = setTimeout(() => {
         bubbleTxt.textContent = text;
         bubbleTxt.style.display = "inline";
@@ -441,30 +481,21 @@ function showBubble(text, delay = 0) {
 }
 
 // ─── 12. INPUT INTERACTIONS ─────────────────
-pwInput?.addEventListener("focus", () => {
-    showBubble("I won't look. 🙈");
-});
-pwInput?.addEventListener("blur", () => {
-    showBubble("All good! 👍");
-});
-emailInput?.addEventListener("focus", () => {
-    showBubble("Enter your email ✉️");
-});
-emailInput?.addEventListener("blur", () => showBubble("Now the secret part... 🔐"));
+pwInput?.addEventListener("focus",  () => showBubble("I won't look. 🙈"));
+pwInput?.addEventListener("blur",   () => showBubble("All good! 👍"));
+emailInput?.addEventListener("focus", () => showBubble("Enter your email ✉️"));
+emailInput?.addEventListener("blur",  () => showBubble("Now the secret part... 🔐"));
 
 document.getElementById("pw-toggle")?.addEventListener("click", () => {
     const icon = document.getElementById("pw-eye-icon");
-    const toggle = document.getElementById("pw-toggle");
     pwVisible = !pwVisible;
     if (pwInput) pwInput.type = pwVisible ? "text" : "password";
-    toggle?.setAttribute("aria-label", pwVisible ? "Hide password" : "Show password");
     if (icon) {
         icon.innerHTML = pwVisible
             ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`
             : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
     }
-    if (pwVisible) { showBubble("I can see it now 👀"); }
-    else           { showBubble("Back to not looking 🙈"); }
+    showBubble(pwVisible ? "I can see it now 👀" : "Back to not looking 🙈");
 });
 
 // ─── 13. NEWSLETTER ────────────────────────
@@ -499,52 +530,40 @@ accessForm?.addEventListener("submit", e => {
         nlSuccess?.classList.add("show");
     }, 420);
 });
-// --- ODCORRECT LOGIN INTEGRATION ---
-const loginForm = document.getElementById('login-form');
 
-if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Prevents the page from refreshing
-
-        // 1. Grab data from the form fields
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-
-        // 2. Visual feedback for the user
-        const bubbleText = document.getElementById('char-bubble-text');
-        if (bubbleText) bubbleText.innerText = "Verifying identity...";
-
-        try {
-            // 3. Send the POST request to your server.js
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                // 4. Success! Redirect to the shop
-                const user = result.user || {
-                    name: getDisplayName(email),
-                    email
-                };
-                saveAuthUser(user);
-                if (bubbleText) bubbleText.innerText = "Access Granted. Welcome.";
-                setTimeout(() => {
-                    window.location.href = '/shop'; // Redirects using your server routes
-                }, 1000);
-            } else {
-                // 5. Failure! Alert the user
-                if (bubbleText) bubbleText.innerText = "System Reject: Invalid Credentials";
-                alert(result.message || "Authentication Failed");
-            }
-        } catch (error) {
-            console.error('System Error:', error);
-            if (bubbleText) bubbleText.innerText = "Connection lost to server...";
+// ─── 14. AUTH HELPERS ────────────────────────
+function getAuthUser() {
+    try { return JSON.parse(localStorage.getItem(AUTH_KEY)); }
+    catch { return null; }
+}
+function saveAuthUser(user) {
+    localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+    updateAuthNav();
+}
+function clearAuthUser() {
+    localStorage.removeItem(AUTH_KEY);
+    updateAuthNav();
+}
+function updateAuthNav() {
+    const user = getAuthUser();
+    document.querySelectorAll(".login-trigger").forEach(trigger => {
+        if (!user) {
+            trigger.classList.remove("logged-in");
+            trigger.textContent = "LOGIN";
+            trigger.removeAttribute("title");
+        } else {
+            trigger.classList.add("logged-in");
+            trigger.textContent = `HI ${(user.name || "USER").toUpperCase().split(" ")[0]}`;
+            trigger.title = `${user.email} — click to logout`;
         }
     });
+}
+async function syncAuthFromServer() {
+    try {
+        const res = await fetch("/api/me");
+        if (!res.ok) { clearAuthUser(); return; }
+        const result = await res.json();
+        if (result.success && result.user) saveAuthUser(result.user);
+        else clearAuthUser();
+    } catch { updateAuthNav(); }
 }

@@ -55,11 +55,15 @@
 
       <div class="login-form-wrap">
     <p class="login-sys-tag">IDENTITY VERIFICATION</p>
-    <h2 class="login-title">SYSTEM LOGIN</h2>
-    <p class="login-sub">Access your drops &amp; order history</p>
-    
-    <!-- WRAP THIS SECTION IN A FORM TAG -->
+    <h2 class="login-title" id="login-title">SYSTEM LOGIN</h2>
+    <p class="login-sub" id="login-sub">Access your drops &amp; order history</p>
+
     <form id="login-form">
+        <!-- Name field — hidden for login, shown for register -->
+        <div class="login-field" id="login-name-row" style="display:none">
+            <label for="login-name">FULL NAME</label>
+            <input type="text" id="login-name" name="name" placeholder="Your Name" autocomplete="name">
+        </div>
         <div class="login-field">
             <label for="login-email">EMAIL ADDRESS</label>
             <input type="email" id="login-email" name="email" placeholder="your@email.com" autocomplete="email" required>
@@ -83,8 +87,11 @@
             </svg>
         </button>
     </form>
-    
-    <p class="login-foot">New here? <a href="#">Request Access →</a></p>
+
+    <p class="login-foot">
+        <span id="login-foot-text">New here? </span>
+        <a href="#" id="login-foot-link">Request Access →</a>
+    </p>
 </div>
 </div>
 

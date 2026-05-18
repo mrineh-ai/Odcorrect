@@ -1,221 +1,155 @@
 // ══════════════════════════════════════════════════════
-//  ODCORRECT — product.js
-//  Individual Product Page
-//  URL format: product.html?id=OC_MN_001
+//  ODCORRECT — product.js  v2
+//  Fetches product from /api/products/:id
+//  Falls back to hardcoded data if server unavailable
 //  Depends on: cart.js
 // ══════════════════════════════════════════════════════
 
-// ─── SHARED PRODUCT DATA ────────────────────────────
-// Keep in sync with shop.js. In production: fetch from API.
-let ALL_PRODUCTS = [
-    { id:"OC_MN_001", name:"OVERSIZED TEE",       cat:"men",      priceNum:1299, price:"₹1,299", badge:"new",  color:"#1d1d1f", colors:[{name:"BLACK",hex:"#1d1d1f"},{name:"CHALK",hex:"#e8e8e0"},{name:"OLIVE",hex:"#3d4228"}], desc:"Heavyweight 450gsm oversized tee with architectural silhouette. Dropped shoulders, boxy cut — engineered to keep its shape drop after drop. RADHA 2026 back-print in tonal ink." },
-    { id:"OC_WM_001", name:"CROP HOODIE",          cat:"women",    priceNum:1899, price:"₹1,899", badge:"new",  color:"#2d2d3a", colors:[{name:"MIDNIGHT",hex:"#2d2d3a"},{name:"BLUSH",hex:"#c8a0a0"}], desc:"Cropped hoodie with raw hem detailing and OD logo embroidery. Kangaroo pocket. 400gsm reverse weave." },
-    { id:"OC_MN_002", name:"CORE JOGGER SET",       cat:"men",      priceNum:2499, price:"₹2,499", badge:"",    color:"#3a3a3a", colors:[{name:"CHARCOAL",hex:"#3a3a3a"},{name:"CREAM",hex:"#f0ede6"}], desc:"Matching heavyweight joggers with engineering-grade stitching and cuffed ankle. Elasticated waistband with OD taping." },
-    { id:"OC_WM_002", name:"REVERSE WEAVE HOODIE", cat:"women",    priceNum:2199, price:"₹2,199", badge:"",    color:"#2a3520", colors:[{name:"FOREST",hex:"#2a3520"},{name:"STONE",hex:"#8a8a7a"}], desc:"Reverse weave construction for maximum shape retention. Side gusset panels. ODCORRECT arch chest print." },
-    { id:"OC_BB_001", name:"MINI TEE",              cat:"baby",     priceNum:699,  price:"₹699",   badge:"new", color:"#1d3a2a", colors:[{name:"SAGE",hex:"#1d3a2a"},{name:"WHITE",hex:"#f8f8f8"}], desc:"Soft 200gsm baby tee in RADHA collection colorways. Pre-shrunk, tagless label. Safe baby-grade dyes. Sizes: 0–6M, 6–12M, 1–2Y, 2–3Y." },
-    { id:"OC_BG_001", name:"BABY DRESS",            cat:"baby",     priceNum:799,  price:"₹799",   badge:"new", color:"#3a1d2a", colors:[{name:"MAUVE",hex:"#3a1d2a"},{name:"PEARL",hex:"#f0ece8"}], desc:"Tiny dress with OD branding for the next generation. Snap buttons for easy change. 0–3 yrs." },
-    { id:"OC_HF_001", name:"OD LOW RUNNER",          cat:"footwear", priceNum:3999, price:"₹3,999", badge:"",   color:"#1d2a3a", colors:[{name:"NAVY",hex:"#1d2a3a"},{name:"OFF-WHITE",hex:"#f4f0e8"}], desc:"Low-profile runner with chunky vulcanised outsole and OD woven tab. Premium suede-touch upper. Unisex sizing." },
-    { id:"OC_HF_002", name:"PLATFORM SLIDE",        cat:"footwear", priceNum:1699, price:"₹1,699", badge:"sold",color:"#2a1d1d", colors:[{name:"OXBLOOD",hex:"#2a1d1d"}], desc:"Platform slide in premium moulded rubber. Sold out — join waitlist for the next drop." },
-    { id:"OC_MN_003", name:"COACH JACKET",          cat:"men",      priceNum:3499, price:"₹3,499", badge:"",   color:"#1a1a2a", colors:[{name:"NAVY",hex:"#1a1a2a"},{name:"CHALK",hex:"#e8e8e0"}], desc:"Satin-finish coach jacket with embroidered ODCORRECT badge and snap buttons. Fully lined. Oversized fit." },
-    { id:"OC_WM_003", name:"UTILITY CARGOS",        cat:"women",    priceNum:2799, price:"₹2,799", badge:"",   color:"#2a2a1a", colors:[{name:"KHAKI",hex:"#2a2a1a"},{name:"BLACK",hex:"#1d1d1f"}], desc:"Six-pocket utility pants with tonal OD hardware and articulated knees. Relaxed fit, wide leg." },
-    { id:"OC_MN_004", name:"TECH FLEECE HALF-ZIP",  cat:"men",      priceNum:2099, price:"₹2,099", badge:"",   color:"#1a2a2a", colors:[{name:"TEAL",hex:"#1a2a2a"},{name:"STONE",hex:"#8a8a7a"}], desc:"Textured tech fleece for the engineering aesthetic. Thumb holes. Half-zip construction." },
-    { id:"OC_WM_004", name:"WIDE LEG SWEATS",       cat:"women",    priceNum:1999, price:"₹1,999", badge:"new",color:"#2a1a2a", colors:[{name:"PLUM",hex:"#2a1a2a"},{name:"CREAM",hex:"#f0ede6"}], desc:"Ultra wide leg with elasticated waistband and OD tape stripe. 380gsm fleece-back cotton." }
+// ─── FALLBACK DATA ──────────────────────────────────
+const ALL_PRODUCTS_FALLBACK = [
+    { id:"OC_MN_001", name:"OVERSIZED TEE",         cat:"men",      priceNum:1299, price:"₹1,299", badge:"new",  color:"#1d1d1f", colors:[{name:"BLACK",hex:"#1d1d1f"},{name:"CHALK",hex:"#e8e8e0"},{name:"OLIVE",hex:"#3d4228"}], desc:"Heavyweight 450gsm oversized tee with architectural silhouette. Dropped shoulders, boxy cut — engineered to keep its shape drop after drop." },
+    { id:"OC_WM_001", name:"CROP HOODIE",            cat:"women",    priceNum:1899, price:"₹1,899", badge:"new",  color:"#2d2d3a", colors:[{name:"MIDNIGHT",hex:"#2d2d3a"},{name:"BLUSH",hex:"#c8a0a0"}], desc:"Cropped hoodie with raw hem detailing and OD logo embroidery. Kangaroo pocket." },
+    { id:"OC_MN_002", name:"CORE JOGGER SET",        cat:"men",      priceNum:2499, price:"₹2,499", badge:"",     color:"#3a3a3a", colors:[{name:"CHARCOAL",hex:"#3a3a3a"},{name:"CREAM",hex:"#f0ede6"}], desc:"Matching heavyweight joggers with engineering-grade stitching and cuffed ankle." },
+    { id:"OC_WM_002", name:"REVERSE WEAVE HOODIE",   cat:"women",    priceNum:2199, price:"₹2,199", badge:"",     color:"#2a3520", colors:[{name:"FOREST",hex:"#2a3520"},{name:"STONE",hex:"#8a8a7a"}], desc:"Reverse weave construction for maximum shape retention. Side gusset panels." },
+    { id:"OC_BB_001", name:"MINI TEE",               cat:"baby",     priceNum:699,  price:"₹699",   badge:"new",  color:"#1d3a2a", colors:[{name:"SAGE",hex:"#1d3a2a"},{name:"WHITE",hex:"#f8f8f8"}], desc:"Soft 200gsm baby tee in RADHA collection colorways. Pre-shrunk, tagless." },
+    { id:"OC_BG_001", name:"BABY DRESS",             cat:"baby",     priceNum:799,  price:"₹799",   badge:"new",  color:"#3a1d2a", colors:[{name:"MAUVE",hex:"#3a1d2a"},{name:"PEARL",hex:"#f0ece8"}], desc:"Tiny dress with OD branding for the next generation. Snap buttons. 0–3 yrs." },
+    { id:"OC_HF_001", name:"OD LOW RUNNER",          cat:"footwear", priceNum:3999, price:"₹3,999", badge:"",     color:"#1d2a3a", colors:[{name:"NAVY",hex:"#1d2a3a"},{name:"OFF-WHITE",hex:"#f4f0e8"}], desc:"Low-profile runner with chunky vulcanised outsole and OD woven tab." },
+    { id:"OC_HF_002", name:"PLATFORM SLIDE",         cat:"footwear", priceNum:1699, price:"₹1,699", badge:"sold", color:"#2a1d1d", colors:[{name:"OXBLOOD",hex:"#2a1d1d"}], desc:"Platform slide in premium moulded rubber. Sold out — join waitlist." },
+    { id:"OC_MN_003", name:"COACH JACKET",           cat:"men",      priceNum:3499, price:"₹3,499", badge:"",     color:"#1a1a2a", colors:[{name:"NAVY",hex:"#1a1a2a"},{name:"CHALK",hex:"#e8e8e0"}], desc:"Satin-finish coach jacket with embroidered ODCORRECT badge and snap buttons." },
+    { id:"OC_WM_003", name:"UTILITY CARGOS",         cat:"women",    priceNum:2799, price:"₹2,799", badge:"",     color:"#2a2a1a", colors:[{name:"KHAKI",hex:"#2a2a1a"},{name:"BLACK",hex:"#1d1d1f"}], desc:"Six-pocket utility pants with tonal OD hardware and articulated knees." },
+    { id:"OC_MN_004", name:"TECH FLEECE HALF-ZIP",   cat:"men",      priceNum:2099, price:"₹2,099", badge:"",     color:"#1a2a2a", colors:[{name:"TEAL",hex:"#1a2a2a"},{name:"STONE",hex:"#8a8a7a"}], desc:"Textured tech fleece for the engineering aesthetic. Thumb holes." },
+    { id:"OC_WM_004", name:"WIDE LEG SWEATS",        cat:"women",    priceNum:1999, price:"₹1,999", badge:"new",  color:"#2a1a2a", colors:[{name:"PLUM",hex:"#2a1a2a"},{name:"CREAM",hex:"#f0ede6"}], desc:"Ultra wide leg with elasticated waistband and OD tape stripe." }
 ];
-
-function normalizeApiProduct(p) {
-    const priceNum = Number(p.priceNum ?? p.price ?? 0);
-    return {
-        ...p,
-        cat: p.cat || p.category || "men",
-        priceNum,
-        price: typeof p.price === "string" ? p.price : formatPrice(priceNum),
-        color: p.color || "#1d1d1f",
-        colors: Array.isArray(p.colors) && p.colors.length
-            ? p.colors
-            : [{ name: "DEFAULT", hex: p.color || "#1d1d1f" }],
-        desc: p.desc || p.description || ""
-    };
-}
-
-async function loadProductsFromApi() {
-    try {
-        const response = await fetch("/api/products");
-        if (!response.ok) return;
-
-        const result = await response.json();
-        if (result.success && Array.isArray(result.products)) {
-            ALL_PRODUCTS = result.products.map(normalizeApiProduct);
-        }
-    } catch {
-        // Keep the bundled product data as a fallback.
-    }
-}
 
 const CAT_LABELS = { men:"M", women:"W", baby:"B", footwear:"F" };
 
 // ─── STATE ──────────────────────────────────────────
-let product        = null;
-let selectedSize   = "M";
-let selectedColor  = null;
-let pdQty          = 1;
-let wishlistItems  = JSON.parse(localStorage.getItem("odcorrect_wishlist") || "[]");
-let sizeGuideOpen  = false;
+let product       = null;
+let allProducts   = [...ALL_PRODUCTS_FALLBACK];
+let selectedSize  = "M";
+let selectedColor = null;
+let pdQty         = 1;
+let sizeGuideOpen = false;
+let wishlistItems = [];
+try { wishlistItems = JSON.parse(localStorage.getItem("odcorrect_wishlist") || "[]"); } catch {}
 
-// ─── READ PRODUCT FROM URL ───────────────────────────
-
-function getProductIdFromURL() {
-    return new URLSearchParams(window.location.search).get("id");
-}
-
+// ─── LOAD PRODUCT ───────────────────────────────────
 async function loadProduct() {
-    await loadProductsFromApi();
-    const id = getProductIdFromURL();
-    product = ALL_PRODUCTS.find(p => p.id === id);
+    const id = new URLSearchParams(window.location.search).get("id");
 
-    if (!product) {
-        // Fallback: load first product so page is never blank
-        product = ALL_PRODUCTS[0];
-        // Optionally redirect: window.location.href = `product.html?id=${ALL_PRODUCTS[0].id}`;
-    }
+    // Try to fetch from API first
+    try {
+        const res = await fetch("/api/products");
+        if (res.ok) {
+            const result = await res.json();
+            if (result.success && Array.isArray(result.products)) {
+                allProducts = result.products.map(p => ({
+                    ...p,
+                    cat:      p.cat || p.category || "men",
+                    priceNum: Number(p.price) || 0,
+                    price:    "₹" + Number(p.price||0).toLocaleString("en-IN"),
+                    color:    p.color || "#1d1d1f",
+                    desc:     p.desc || p.description || "",
+                    colors:   p.colors || [{ name:"DEFAULT", hex: p.color||"#1d1d1f" }]
+                }));
+            }
+        }
+    } catch { /* fallback */ }
 
+    product = allProducts.find(p => p.id === id) || allProducts[0];
     renderProduct();
 }
 
 // ─── RENDER ─────────────────────────────────────────
-
 function renderProduct() {
     const p = product;
-    selectedColor = p.colors[0];
+    selectedColor = p.colors?.[0] || { name:"DEFAULT", hex: p.color };
 
-    // Page title
     document.title = `ODCORRECT | ${p.name}`;
 
-    // Breadcrumb
-    const bc = document.getElementById("bc-product-name");
-    if (bc) bc.textContent = p.name;
+    set("bc-product-name", p.name);
+    set("pd-cat",   `// ${p.cat.toUpperCase()}`);
+    set("pd-id",    `CORE_ID: ${p.id}`);
+    set("pd-name",  p.name);
+    set("pd-price", p.price);
+    set("pd-desc",  p.desc);
 
-    // Meta
-    setText("pd-cat",   `// ${p.cat.toUpperCase()}`);
-    setText("pd-id",    `CORE_ID: ${p.id}`);
-    setText("pd-name",  p.name);
-    setText("pd-price", p.price);
-    setText("pd-desc",  p.desc);
-
-    // Badge
     if (p.badge === "sold") {
-        const stockEl = document.getElementById("stock-label");
-        if (stockEl) {
-            stockEl.textContent = "SOLD OUT";
-            stockEl.classList.add("out-of-stock");
-        }
-        const addBtn = document.getElementById("pd-add-btn");
-        if (addBtn) {
-            addBtn.disabled = true;
-            addBtn.querySelector("span").textContent = "SOLD OUT";
-            addBtn.style.opacity = ".5";
-            addBtn.style.cursor = "not-allowed";
-        }
+        const sl = document.getElementById("stock-label");
+        if (sl) { sl.textContent = "SOLD OUT"; sl.classList.add("out-of-stock"); }
+        const ab = document.getElementById("pd-add-btn");
+        if (ab) { ab.disabled = true; ab.style.opacity = ".5"; ab.style.cursor = "not-allowed"; ab.querySelector("span").textContent = "SOLD OUT"; }
     }
 
-    // Gallery colour block
-    renderGallery(p);
-
-    // Color swatches
-    renderSwatches(p);
-
-    // Size grid
+    renderGallery();
+    renderSwatches();
     renderSizes();
-
-    // Wishlist state
     updateWishlistBtn();
-
-    // Related products
-    renderRelated(p);
-
-    // Reveal animations
+    renderRelated();
     animatePageIn();
 }
 
-function setText(id, val) {
+function set(id, val) {
     const el = document.getElementById(id);
     if (el) el.textContent = val;
 }
 
 // ─── GALLERY ────────────────────────────────────────
-
-function renderGallery(p) {
-    const block = document.getElementById("gallery-color-block");
-    const label = document.getElementById("gallery-block-label");
+function renderGallery() {
+    const block  = document.getElementById("gallery-color-block");
+    const label  = document.getElementById("gallery-block-label");
     const badges = document.getElementById("gallery-badges");
+    if (block) block.style.background = selectedColor?.hex || product.color;
+    if (label) label.textContent = CAT_LABELS[product.cat] || "OD";
+    if (badges) badges.innerHTML = product.badge
+        ? `<span class="gallery-badge ${product.badge}">${product.badge.toUpperCase()}</span>` : "";
+    syncThumbs();
+}
 
-    if (block) block.style.background = selectedColor?.hex || p.color;
-    if (label) label.textContent = CAT_LABELS[p.cat] || "OD";
-
-    if (badges) {
-        badges.innerHTML = p.badge
-            ? `<span class="gallery-badge ${p.badge}">${p.badge.toUpperCase()}</span>`
-            : "";
-    }
-
-    // Sync thumb colours
+function syncThumbs() {
     ["thumb-0","thumb-1","thumb-2"].forEach((id, i) => {
         const el = document.getElementById(id);
-        if (el) el.style.background = p.colors[i % p.colors.length]?.hex || p.color;
+        if (el) el.style.background = product.colors?.[i % product.colors.length]?.hex || product.color;
     });
 }
 
-function switchGalleryView(idx) {
-    document.querySelectorAll(".thumb").forEach((t, i) => {
-        t.classList.toggle("active", i === idx);
-    });
-    // Animate the main block
+document.addEventListener("click", e => {
+    const thumb = e.target.closest(".thumb");
+    if (!thumb || !product) return;
+    const idx = parseInt(thumb.dataset.idx);
+    document.querySelectorAll(".thumb").forEach((t,i) => t.classList.toggle("active", i===idx));
     const block = document.getElementById("gallery-color-block");
     if (block) {
         block.style.transition = "opacity .2s";
         block.style.opacity = "0";
         setTimeout(() => {
-            block.style.background = product.colors[idx % product.colors.length]?.hex || product.color;
+            block.style.background = product.colors?.[idx % product.colors.length]?.hex || product.color;
             block.style.opacity = "1";
         }, 200);
     }
-}
+});
 
 // ─── SWATCHES ───────────────────────────────────────
-
-function renderSwatches(p) {
+function renderSwatches() {
     const wrap = document.getElementById("pd-swatches");
-    const label = document.getElementById("pd-selected-color");
-    if (!wrap) return;
-
-    wrap.innerHTML = p.colors.map((c, i) => `
-        <button
-            class="pd-swatch ${i === 0 ? "active" : ""}"
-            style="background:${c.hex}"
-            data-color="${c.name}"
-            data-hex="${c.hex}"
-            aria-label="Color: ${c.name}"
-            title="${c.name}">
-        </button>
-    `).join("");
-
+    const lbl  = document.getElementById("pd-selected-color");
+    if (!wrap || !product.colors) return;
+    wrap.innerHTML = product.colors.map((c,i) =>
+        `<button class="pd-swatch ${i===0?"active":""}" style="background:${c.hex}" data-color="${c.name}" data-hex="${c.hex}" aria-label="${c.name}" title="${c.name}"></button>`
+    ).join("");
     wrap.querySelectorAll(".pd-swatch").forEach(btn => {
         btn.addEventListener("click", () => {
             wrap.querySelectorAll(".pd-swatch").forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
             selectedColor = { name: btn.dataset.color, hex: btn.dataset.hex };
-            if (label) label.textContent = selectedColor.name;
-            // Update gallery block colour
+            if (lbl) lbl.textContent = selectedColor.name;
             const block = document.getElementById("gallery-color-block");
-            if (block) {
-                block.style.transition = "background .4s ease";
-                block.style.background = selectedColor.hex;
-            }
+            if (block) { block.style.transition = "background .4s"; block.style.background = selectedColor.hex; }
         });
     });
 }
 
 // ─── SIZES ──────────────────────────────────────────
-
 function renderSizes() {
     document.querySelectorAll(".pd-size-btn").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.size === selectedSize);
@@ -229,127 +163,76 @@ function renderSizes() {
     });
 }
 
-// ─── SIZE GUIDE ACCORDION ───────────────────────────
-
+// ─── SIZE GUIDE ─────────────────────────────────────
 document.getElementById("size-guide-toggle")?.addEventListener("click", () => {
-    const drawer = document.getElementById("size-guide-drawer");
-    if (!drawer) return;
     sizeGuideOpen = !sizeGuideOpen;
-    drawer.classList.toggle("open", sizeGuideOpen);
+    document.getElementById("size-guide-drawer")?.classList.toggle("open", sizeGuideOpen);
     const btn = document.getElementById("size-guide-toggle");
     if (btn) btn.textContent = sizeGuideOpen ? "SIZE GUIDE ↑" : "SIZE GUIDE ↘";
 });
 
-// ─── QTY CONTROLS ───────────────────────────────────
-
+// ─── QTY ────────────────────────────────────────────
 document.getElementById("pd-qty-minus")?.addEventListener("click", () => {
-    if (pdQty > 1) {
-        pdQty--;
-        const el = document.getElementById("pd-qty-value");
-        if (el) el.textContent = pdQty;
-    }
+    if (pdQty > 1) { pdQty--; set("pd-qty-value", pdQty); }
 });
 document.getElementById("pd-qty-plus")?.addEventListener("click", () => {
-    if (pdQty < 10) {
-        pdQty++;
-        const el = document.getElementById("pd-qty-value");
-        if (el) el.textContent = pdQty;
-    }
+    if (pdQty < 10) { pdQty++; set("pd-qty-value", pdQty); }
 });
 
 // ─── ADD TO BAG ─────────────────────────────────────
-
 document.getElementById("pd-add-btn")?.addEventListener("click", () => {
     if (!product || product.badge === "sold") return;
-    const item = {
-        id:        product.id,
-        name:      product.name,
-        price:     product.priceNum,
-        color:     selectedColor?.hex || product.color,
-        cat:       product.cat,
-        size:      selectedSize,
-        colorName: selectedColor?.name || "DEFAULT"
-    };
-    addToCart(item, pdQty);
+    addToCart({ id:product.id, name:product.name, price:product.priceNum, color:selectedColor?.hex||product.color, cat:product.cat, size:selectedSize, colorName:selectedColor?.name||"DEFAULT" }, pdQty);
     showToast(product.name);
-    animateAddBtn();
+    // Flash button green
+    const btn = document.getElementById("pd-add-btn");
+    const span = btn?.querySelector("span");
+    if (span) { span.textContent = "ADDED ✓"; btn.style.background = "var(--accent)"; }
+    setTimeout(() => { if (span) { span.textContent = "ADD TO BAG"; if (btn) btn.style.background = ""; } }, 1800);
 });
 
-function animateAddBtn() {
-    const btn = document.getElementById("pd-add-btn");
-    if (!btn) return;
-    const span = btn.querySelector("span");
-    const orig = span?.textContent;
-    if (span) span.textContent = "ADDED ✓";
-    btn.style.background = "var(--accent)";
-    setTimeout(() => {
-        if (span) span.textContent = orig;
-        btn.style.background = "";
-    }, 1800);
-}
-
 // ─── WISHLIST ────────────────────────────────────────
-
 function updateWishlistBtn() {
-    const btn  = document.getElementById("wishlist-btn");
     const icon = document.getElementById("wishlist-icon");
-    if (!btn || !icon || !product) return;
+    if (!icon || !product) return;
     const isWished = wishlistItems.includes(product.id);
     icon.style.fill   = isWished ? "#ff453a" : "none";
     icon.style.stroke = isWished ? "#ff453a" : "currentColor";
-    btn.title = isWished ? "Remove from wishlist" : "Add to wishlist";
 }
-
 document.getElementById("wishlist-btn")?.addEventListener("click", () => {
     if (!product) return;
     const idx = wishlistItems.indexOf(product.id);
-    if (idx > -1) wishlistItems.splice(idx, 1);
-    else wishlistItems.push(product.id);
+    if (idx > -1) wishlistItems.splice(idx, 1); else wishlistItems.push(product.id);
     localStorage.setItem("odcorrect_wishlist", JSON.stringify(wishlistItems));
     updateWishlistBtn();
-    // Quick pulse animation
     const btn = document.getElementById("wishlist-btn");
     if (btn) { btn.style.transform = "scale(1.35)"; setTimeout(() => btn.style.transform = "", 250); }
 });
 
 // ─── ACCORDION ───────────────────────────────────────
-
 document.querySelectorAll(".accordion-btn").forEach(btn => {
     btn.addEventListener("click", () => {
         const target = btn.dataset.target;
         const body   = document.getElementById(`acc-${target}`);
         const isOpen = body?.classList.contains("open");
-
-        // Close all
         document.querySelectorAll(".accordion-body").forEach(b => b.classList.remove("open"));
         document.querySelectorAll(".accordion-btn").forEach(b => b.classList.remove("active"));
-
-        // Open clicked (toggle)
-        if (!isOpen) {
-            body?.classList.add("open");
-            btn.classList.add("active");
-        }
+        if (!isOpen) { body?.classList.add("open"); btn.classList.add("active"); }
     });
 });
 
-// ─── RELATED PRODUCTS ────────────────────────────────
-
-function renderRelated(p) {
+// ─── RELATED ────────────────────────────────────────
+function renderRelated() {
     const grid = document.getElementById("related-grid");
-    if (!grid) return;
-
-    // Pick up to 4 products in the same category (excluding current)
-    const related = ALL_PRODUCTS
-        .filter(r => r.cat === p.cat && r.id !== p.id)
+    if (!grid || !product) return;
+    const related = allProducts
+        .filter(r => r.cat === product.cat && r.id !== product.id)
         .slice(0, 4);
-
-    // If fewer than 4 in same cat, pad with others
     if (related.length < 4) {
-        ALL_PRODUCTS.filter(r => r.id !== p.id && !related.includes(r))
+        allProducts.filter(r => r.id !== product.id && !related.find(x => x.id === r.id))
             .slice(0, 4 - related.length)
             .forEach(r => related.push(r));
     }
-
     grid.innerHTML = related.map(r => `
         <a class="related-card" href="product.html?id=${r.id}">
             <div class="related-img" style="background:${r.color}">
@@ -361,19 +244,11 @@ function renderRelated(p) {
                 <p class="related-name">${r.name}</p>
                 <p class="related-price">${r.price}</p>
             </div>
-        </a>
-    `).join("");
+        </a>`
+    ).join("");
 }
 
-// ─── GALLERY THUMB CLICKS ────────────────────────────
-
-document.addEventListener("click", e => {
-    const thumb = e.target.closest(".thumb");
-    if (thumb) switchGalleryView(parseInt(thumb.dataset.idx));
-});
-
 // ─── TOAST ───────────────────────────────────────────
-
 let toastTimer = null;
 function showToast(name) {
     const toast = document.getElementById("toast");
@@ -388,51 +263,39 @@ function showToast(name) {
 }
 
 // ─── PAGE-IN ANIMATIONS ──────────────────────────────
-
 function animatePageIn() {
-    // Stagger animate the detail info children
-    const infoEl = document.querySelector(".product-detail-info");
-    const galleryEl = document.querySelector(".product-gallery");
-
-    if (galleryEl) {
-        galleryEl.style.opacity = "0";
-        galleryEl.style.transform = "translateX(-30px)";
-        galleryEl.style.transition = "opacity .7s .1s cubic-bezier(.2,1,.3,1), transform .7s .1s cubic-bezier(.2,1,.3,1)";
-        setTimeout(() => {
-            galleryEl.style.opacity = "1";
-            galleryEl.style.transform = "translateX(0)";
-        }, 60);
+    const gallery = document.querySelector(".product-gallery");
+    const info    = document.querySelector(".product-detail-info");
+    if (gallery) {
+        gallery.style.cssText = "opacity:0;transform:translateX(-30px);transition:opacity .7s .1s cubic-bezier(.2,1,.3,1),transform .7s .1s cubic-bezier(.2,1,.3,1)";
+        setTimeout(() => { gallery.style.opacity = "1"; gallery.style.transform = "translateX(0)"; }, 60);
     }
-
-    if (infoEl) {
-        const children = infoEl.querySelectorAll(":scope > *");
-        children.forEach((child, i) => {
-            child.style.opacity = "0";
-            child.style.transform = "translateY(24px)";
-            child.style.transition = `opacity .6s ${0.1 + i * 0.07}s cubic-bezier(.2,1,.3,1), transform .6s ${0.1 + i * 0.07}s cubic-bezier(.2,1,.3,1)`;
-            setTimeout(() => {
-                child.style.opacity = "1";
-                child.style.transform = "translateY(0)";
-            }, 60);
+    if (info) {
+        [...info.querySelectorAll(":scope > *")].forEach((child, i) => {
+            child.style.cssText = `opacity:0;transform:translateY(24px);transition:opacity .6s ${0.1+i*.07}s cubic-bezier(.2,1,.3,1),transform .6s ${0.1+i*.07}s cubic-bezier(.2,1,.3,1)`;
+            setTimeout(() => { child.style.opacity = "1"; child.style.transform = "translateY(0)"; }, 60);
         });
     }
-
-    // Related section
     setTimeout(() => {
         document.querySelectorAll(".related-card").forEach((card, i) => {
-            card.style.opacity = "0";
-            card.style.transform = "translateY(20px)";
-            card.style.transition = `opacity .5s ${i * 0.08}s ease, transform .5s ${i * 0.08}s ease`;
-            setTimeout(() => {
-                card.style.opacity = "1";
-                card.style.transform = "translateY(0)";
-            }, 60);
+            card.style.cssText = `opacity:0;transform:translateY(20px);transition:opacity .5s ${i*.08}s ease,transform .5s ${i*.08}s ease`;
+            setTimeout(() => { card.style.opacity="1"; card.style.transform="translateY(0)"; }, 60);
         });
     }, 400);
 }
 
-// ─── NAV SCROLL ──────────────────────────────────────
+// ─── WIN EFFECT ──────────────────────────────────────
+function initWinEffect() {
+    document.querySelectorAll(".win-effect").forEach(el => {
+        el.addEventListener("mousemove", e => {
+            const r = el.getBoundingClientRect();
+            el.style.setProperty("--x", `${e.clientX-r.left}px`);
+            el.style.setProperty("--y", `${e.clientY-r.top}px`);
+        });
+    });
+}
 
+// ─── NAV SCROLL ──────────────────────────────────────
 let lastScrollPD = 0;
 window.addEventListener("scroll", () => {
     const nav = document.querySelector(".compact-nav");
@@ -444,20 +307,7 @@ window.addEventListener("scroll", () => {
     lastScrollPD = cur;
 }, { passive: true });
 
-// ─── WIN EFFECT ──────────────────────────────────────
-
-function initWinEffect() {
-    document.querySelectorAll(".win-effect").forEach(el => {
-        el.addEventListener("mousemove", e => {
-            const r = el.getBoundingClientRect();
-            el.style.setProperty("--x", `${e.clientX - r.left}px`);
-            el.style.setProperty("--y", `${e.clientY - r.top}px`);
-        });
-    });
-}
-
 // ─── INIT ────────────────────────────────────────────
-
 document.addEventListener("DOMContentLoaded", () => {
     loadProduct();
     initWinEffect();
