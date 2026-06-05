@@ -22,6 +22,18 @@ const ALL_PRODUCTS_FALLBACK = [
 ];
 
 const CAT_LABELS = { men:"M", women:"W", baby:"B", footwear:"F" };
+const PRODUCT_IMAGES = {
+    OC_MN_001:"images/model.male.jpg", OC_MN_002:"images/model.male.jpg",
+    OC_MN_003:"images/model.male.jpg", OC_MN_004:"images/model.male.jpg",
+    OC_WM_001:"images/model.female.jpg", OC_WM_002:"images/model.female.jpg",
+    OC_WM_003:"images/model.female.jpg", OC_WM_004:"images/model.female.jpg",
+    OC_BB_001:"images/baby.boy.jpg", OC_BG_001:"images/baby.girl.jpg",
+    OC_HF_001:"images/his.shoe.jpg", OC_HF_002:"images/her.shoe.jpg"
+};
+
+function productImage(item) {
+    return PRODUCT_IMAGES[item.id] || "images/model.male.jpg";
+}
 
 // ─── STATE ──────────────────────────────────────────
 let product       = null;
@@ -99,7 +111,10 @@ function renderGallery() {
     const block  = document.getElementById("gallery-color-block");
     const label  = document.getElementById("gallery-block-label");
     const badges = document.getElementById("gallery-badges");
-    if (block) block.style.background = selectedColor?.hex || product.color;
+    if (block) {
+        block.style.backgroundColor = selectedColor?.hex || product.color;
+        block.style.backgroundImage = `url('${productImage(product)}')`;
+    }
     if (label) label.textContent = CAT_LABELS[product.cat] || "OD";
     if (badges) badges.innerHTML = product.badge
         ? `<span class="gallery-badge ${product.badge}">${product.badge.toUpperCase()}</span>` : "";
@@ -109,7 +124,11 @@ function renderGallery() {
 function syncThumbs() {
     ["thumb-0","thumb-1","thumb-2"].forEach((id, i) => {
         const el = document.getElementById(id);
-        if (el) el.style.background = product.colors?.[i % product.colors.length]?.hex || product.color;
+        if (el) {
+            el.style.backgroundColor = product.colors?.[i % product.colors.length]?.hex || product.color;
+            el.style.backgroundImage = `url('${productImage(product)}')`;
+            el.style.backgroundPosition = `${50 + (i - 1) * 12}% center`;
+        }
     });
 }
 
@@ -123,7 +142,7 @@ document.addEventListener("click", e => {
         block.style.transition = "opacity .2s";
         block.style.opacity = "0";
         setTimeout(() => {
-            block.style.background = product.colors?.[idx % product.colors.length]?.hex || product.color;
+            block.style.backgroundColor = product.colors?.[idx % product.colors.length]?.hex || product.color;
             block.style.opacity = "1";
         }, 200);
     }
@@ -144,7 +163,10 @@ function renderSwatches() {
             selectedColor = { name: btn.dataset.color, hex: btn.dataset.hex };
             if (lbl) lbl.textContent = selectedColor.name;
             const block = document.getElementById("gallery-color-block");
-            if (block) { block.style.transition = "background .4s"; block.style.background = selectedColor.hex; }
+            if (block) {
+                block.style.transition = "background-color .4s";
+                block.style.backgroundColor = selectedColor.hex;
+            }
         });
     });
 }

@@ -42,11 +42,12 @@
         <div class="login-character-wrap">
             <div class="char-glow-anim"></div>
             <div class="char-scene">
-                <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.88/build/spline-viewer.js"></script>
-                <spline-viewer url="https://prod.spline.design/Br2RZcp0Wvu5i5Ic/scene.splinecode" class="spline-robot"></spline-viewer>
-                <div class="char-bounce-indicator">
-                    <span></span><span></span><span></span>
+                <div class="login-brand-visual" aria-hidden="true">
+                    <span class="login-orbit orbit-one"></span>
+                    <span class="login-orbit orbit-two"></span>
+                    <span class="login-monogram">OD</span>
                 </div>
+                <p class="login-visual-label">MEMBERS ACCESS</p>
             </div>
             <div class="char-bubble" id="char-bubble">
                 <span id="char-bubble-text">Ready to authenticate...</span>
@@ -102,34 +103,59 @@
         <div class="hero-noise"></div>
         <div class="hero-dot-grid"></div>
 
-        <nav class="compact-nav">
-            <div class="nav-logo">
+        <nav class="compact-nav" aria-label="Main navigation">
+            <a class="nav-logo" href="/" aria-label="ODCORRECT home">
                 <img src="images/logo2.png" class="nav-logo-img" alt="ODCORRECT logo">
                 <span>ODCORRECT</span>
+            </a>
+            <button class="nav-menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="nav-drawer" id="site-menu">
+                <p class="nav-drawer-label">NAVIGATION</p>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/shop">Shop</a></li>
+                    <li><a href="#collection">Collection</a></li>
+                    <li><a href="#archive">Archive</a></li>
+                    <li><button type="button" class="login-trigger" id="open-login">LOGIN</button></li>
+                    <li class="bag-icon">
+                        <a href="/cart">
+                            <span class="bag-text">Bag</span>
+                            <span class="bag-count" id="bag-count">0</span>
+                        </a>
+                    </li>
+                </ul>
+                <p class="nav-drawer-foot">RADHA COLLECTION 2026</p>
             </div>
-            <ul class="nav-links">
-                <li class="nav-link-desktop"><a href="#collection">Collection</a></li>
-                <li class="nav-link-desktop"><a href="#archive">Archive</a></li>
-                <li><button class="login-trigger" id="open-login">LOGIN</button></li>
-                <li class="bag-icon">
-    <a href="cart.html"> <span class="bag-text">BAG</span>
-        <span class="bag-count" id="bag-count">0</span>
-    </a>
-</li>
-            </ul>
         </nav>
+        <div class="nav-drawer-backdrop"></div>
 
         <div class="hero-content">
-            <div class="hero-headline-wrap">
-                <p class="hero-eyebrow reveal-up" style="--d:0s">ODCORRECT-RADHA COLLECTION</p>
-            </div>
+            <section class="hero-stage" aria-label="ODCORRECT Radha Collection">
+                <div class="hero-media hero-media-one"></div>
+                <div class="hero-media hero-media-two"></div>
+                <div class="hero-stage-content">
+                    <p class="hero-eyebrow reveal-up" style="--d:0s">ODCORRECT / RADHA COLLECTION 2026</p>
+                    <h1 class="hero-type" aria-label="Wear the future">
+                        <span class="hero-word reveal-up" style="--d:.08s">WEAR.</span>
+                        <span class="hero-word hero-word-outline reveal-up" style="--d:.18s">THE.</span>
+                        <span class="hero-word reveal-up" style="--d:.28s">FUTURE.</span>
+                    </h1>
+                    <p class="hero-stage-sub reveal-up" style="--d:.38s">Engineered silhouettes. Limited drops. Built beyond trends.</p>
+                    <a class="hero-shop-link reveal-up" style="--d:.46s" href="/shop">
+                        Shop the collection <span aria-hidden="true">→</span>
+                    </a>
+                </div>
+                <div class="hero-stage-index" aria-hidden="true">
+                    <span>DROP 01</span>
+                    <span>NEW DELHI / 2026</span>
+                </div>
+            </section>
 
-            <!-- FULLSCREEN SPLINE HERO SECTION -->
-            <div class="hero-spline-container reveal">
-                <spline-viewer url="https://prod.spline.design/hQEJqg9YTZcUrvgY/scene.splinecode" class="hero-spline-full"></spline-viewer>
+            <div class="hero-desc-wrap">
+                <p class="hero-desc reveal-up" style="--d:.38s">Engineering Apparel for the SUPERCOOL Generation</p>
             </div>
-
-            <p class="hero-desc reveal-up" style="--d:.38s">Engineering Apparel for the SUPERCOOL Generation</p>
 
             <div class="bento-grid reveal">
                 <div class="tile big-tile win-effect">
@@ -324,7 +350,7 @@
         </div>
     </footer>
 
-    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.88/build/spline-viewer.js"></script>
+    <script src="js/navigation.js"></script>
     <script src="js/script.js"></script>
 
 </body>

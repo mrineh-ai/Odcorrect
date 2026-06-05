@@ -13,24 +13,28 @@
 <body>
 
     <!-- ══ NAV ══ -->
-    <nav class="compact-nav">
-        <div class="nav-logo">
+    <nav class="compact-nav" aria-label="Main navigation">
+        <a class="nav-logo" href="/" aria-label="ODCORRECT home">
             <img src="images/logo2.png" class="nav-logo-img" alt="ODCORRECT logo">
             <span>ODCORRECT</span>
+        </a>
+        <button class="nav-menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-drawer" id="site-menu">
+            <p class="nav-drawer-label">NAVIGATION</p>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/shop">Shop</a></li>
+                <li><a href="/#collection">Collection</a></li>
+                <li><a href="/#archive">Archive</a></li>
+                <li><a href="/?login=1" class="login-trigger">Login</a></li>
+                <li class="bag-icon"><a href="/cart"><span class="bag-text">Bag</span><span class="bag-count" id="bag-count">0</span></a></li>
+            </ul>
+            <p class="nav-drawer-foot">RADHA COLLECTION 2026</p>
         </div>
-        <ul class="nav-links">
-            <li class="nav-link-desktop"><a href="index.html">Home</a></li>
-            <li class="nav-link-desktop"><a href="shop.html">Shop</a></li>
-            <li class="nav-link-desktop"><a href="index.html#archive">Archive</a></li>
-            <li><a href="index.html#" class="login-trigger">LOGIN</a></li>
-            <li class="bag-icon">
-    <a href="cart.html" style="display: block; cursor: pointer;">
-        <span class="bag-text">BAG</span>
-        <span class="bag-count" id="bag-count">0</span>
-    </a>
-</li>
-        </ul>
     </nav>
+    <div class="nav-drawer-backdrop"></div>
 
     <!-- ══ BREADCRUMB ══ -->
     <div class="breadcrumb" id="breadcrumb">
@@ -268,6 +272,7 @@
         </div>
     </footer>
 
+    <script src="js/navigation.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/product.js"></script>
 </body>

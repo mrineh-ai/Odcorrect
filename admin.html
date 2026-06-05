@@ -11,17 +11,26 @@
     <link rel="stylesheet" href="css/admin.css">
 </head>
 <body class="admin-page">
-    <nav class="compact-nav admin-nav">
-        <div class="nav-logo">
+    <nav class="compact-nav admin-nav" aria-label="Admin navigation">
+        <a class="nav-logo" href="/" aria-label="ODCORRECT home">
             <img src="images/logo2.png" class="nav-logo-img" alt="ODCORRECT logo">
             <span>ODCORRECT</span>
+        </a>
+        <button class="nav-menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-drawer" id="site-menu">
+            <p class="nav-drawer-label">ADMIN NAVIGATION</p>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/shop">Shop</a></li>
+                <li><a href="/cart">Bag</a></li>
+                <li><button type="button" class="login-trigger logged-in" id="admin-user-btn">ADMIN</button></li>
+            </ul>
+            <p class="nav-drawer-foot">ODCORRECT CONTROL</p>
         </div>
-        <ul class="nav-links">
-            <li><a href="/">Home</a></li>
-            <li><a href="/shop">Shop</a></li>
-            <li><button class="login-trigger logged-in" id="admin-user-btn">ADMIN</button></li>
-        </ul>
     </nav>
+    <div class="nav-drawer-backdrop"></div>
 
     <main class="admin-shell">
         <header class="admin-header">
@@ -135,6 +144,7 @@
         </section>
     </main>
 
+    <script src="js/navigation.js"></script>
     <script src="js/admin.js"></script>
 </body>
 </html>

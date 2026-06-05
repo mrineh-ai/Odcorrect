@@ -191,6 +191,7 @@ function updateAuthNav() {
         if (!user) {
             trigger.classList.remove("logged-in");
             trigger.textContent = "LOGIN";
+            if (trigger.tagName === "A") trigger.setAttribute("href", "/?login=1");
             return;
         }
 

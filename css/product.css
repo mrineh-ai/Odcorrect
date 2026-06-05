@@ -60,7 +60,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background .4s ease;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    transition: background-color .4s ease, transform .6s cubic-bezier(.2,1,.3,1);
 }
 
 .gallery-block-label {
@@ -72,6 +75,8 @@
     transition: transform .4s cubic-bezier(.34,1.56,.64,1);
 }
 .gallery-main:hover .gallery-block-label { transform: scale(1.08) rotate(-3deg); }
+.gallery-color-block[style*="background-image"] .gallery-block-label { display:none; }
+.gallery-main:hover .gallery-color-block { transform:scale(1.025); }
 
 .gallery-badges {
     position: absolute;
@@ -134,7 +139,9 @@
     width: 100%;
     height: 100%;
     min-height: 72px;
-    transition: background .4s;
+    background-position: center;
+    background-size: cover;
+    transition: background-color .4s, transform .25s;
 }
 .thumb-angle  { opacity: .75; }
 .thumb-detail { opacity: .55; }
@@ -622,10 +629,6 @@
     .pd-add-btn { flex: 1 1 100%; }
     .related-section { padding: 40px 4% 60px; }
     .toast { bottom: 16px; right: 16px; left: 16px; max-width: none; }
-}
-.compact-nav {
-    position: relative; /* or sticky */
-    z-index: 9999 !important; /* The !important makes sure it wins every fight */
 }
 
 .bag-icon a {

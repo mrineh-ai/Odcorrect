@@ -21,6 +21,18 @@ let SHOP_PRODUCTS = [
 ];
 
 const CAT_LABELS = { men:"M", women:"W", baby:"B", footwear:"F" };
+const PRODUCT_IMAGES = {
+    OC_MN_001:"images/model.male.jpg", OC_MN_002:"images/model.male.jpg",
+    OC_MN_003:"images/model.male.jpg", OC_MN_004:"images/model.male.jpg",
+    OC_WM_001:"images/model.female.jpg", OC_WM_002:"images/model.female.jpg",
+    OC_WM_003:"images/model.female.jpg", OC_WM_004:"images/model.female.jpg",
+    OC_BB_001:"images/baby.boy.jpg", OC_BG_001:"images/baby.girl.jpg",
+    OC_HF_001:"images/his.shoe.jpg", OC_HF_002:"images/her.shoe.jpg"
+};
+
+function productImage(product) {
+    return PRODUCT_IMAGES[product.id] || "images/model.male.jpg";
+}
 
 // ─── FETCH FROM API ──────────────────────────────────
 async function loadShopProductsFromApi() {
@@ -82,7 +94,7 @@ function renderShopProducts() {
             card.className = "product-card";
             card.innerHTML = `
                 <div class="product-img-wrap" onclick="location.href='product.html?id=${p.id}'" style="cursor:pointer">
-                    <div class="product-img-block" style="background:${p.color}">
+                    <div class="product-img-block has-image" style="background-image:url('${productImage(p)}');background-color:${p.color}">
                         <span class="img-block-label">${CAT_LABELS[p.cat] || "OD"}</span>
                     </div>
                     ${p.badge ? `<div class="product-badge ${p.badge}">${p.badge.toUpperCase()}</div>` : ""}

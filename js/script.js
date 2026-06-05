@@ -22,6 +22,18 @@ let PRODUCTS = [
 
 const CAT_LABELS = { men:"M", women:"W", baby:"B", footwear:"F" };
 const AUTH_KEY   = "odcorrect_user";
+const PRODUCT_IMAGES = {
+    OC_MN_001:"images/model.male.jpg", OC_MN_002:"images/model.male.jpg",
+    OC_MN_003:"images/model.male.jpg", OC_MN_004:"images/model.male.jpg",
+    OC_WM_001:"images/model.female.jpg", OC_WM_002:"images/model.female.jpg",
+    OC_WM_003:"images/model.female.jpg", OC_WM_004:"images/model.female.jpg",
+    OC_BB_001:"images/baby.boy.jpg", OC_BG_001:"images/baby.girl.jpg",
+    OC_HF_001:"images/his.shoe.jpg", OC_HF_002:"images/her.shoe.jpg"
+};
+
+function productImage(product) {
+    return PRODUCT_IMAGES[product.id] || "images/model.male.jpg";
+}
 
 function formatPriceDisplay(amount) {
     return "₹" + Number(amount || 0).toLocaleString("en-IN");
@@ -131,6 +143,9 @@ function spawnIntroParticles() {
 
 window.addEventListener("DOMContentLoaded", async () => {
     const intro = document.getElementById("intro-overlay");
+    const loginRequested = new URLSearchParams(window.location.search).get("login") === "1";
+    const introSeen = sessionStorage.getItem("odcorrect_intro_seen") === "1";
+    const introDelay = introSeen || loginRequested ? 80 : 2200;
     document.body.classList.add("no-scroll");
     document.querySelectorAll(".reveal-up").forEach(el => {
         el.style.animationPlayState = "paused";
@@ -153,11 +168,16 @@ window.addEventListener("DOMContentLoaded", async () => {
     setTimeout(() => {
         intro?.classList.add("intro-hidden");
         document.body.classList.remove("no-scroll");
+        sessionStorage.setItem("odcorrect_intro_seen", "1");
         document.querySelectorAll(".reveal-up").forEach(el => {
             el.style.animationPlayState = "running";
         });
         revealAll();
-    }, 3800);
+        if (loginRequested) {
+            openLogin();
+            history.replaceState({}, "", window.location.pathname + window.location.hash);
+        }
+    }, introDelay);
 });
 
 // ─── 5. NAV BEHAVIOR ─────────────────────────
@@ -254,8 +274,8 @@ function renderProducts(filter) {
         card.style.animationDelay = `${i * 0.055}s`;
         card.innerHTML = `
             <div class="product-img-wrap" onclick="location.href='product.html?id=${p.id}'">
-                <div class="product-img-block" style="background:${p.color}">
-                    ${CAT_LABELS[p.cat] || "OD"}
+                <div class="product-img-block has-image" style="background-image:url('${productImage(p)}');background-color:${p.color}">
+                    <span class="img-block-label">${CAT_LABELS[p.cat] || "OD"}</span>
                 </div>
                 ${p.badge ? `<div class="product-badge ${p.badge}">${p.badge.toUpperCase()}</div>` : ""}
             </div>
@@ -343,8 +363,22 @@ document.querySelector(".add-bag-btn")?.addEventListener("click", () => {
 });
 
 // ─── 10. LOGIN MODAL ─────────────────────────
-function openLogin() {
-    const user = getAuthUser();
+async function openLogin() {
+    let user = null;
+
+    try {
+        const response = await fetch("/api/me");
+        if (response.ok) {
+            const result = await response.json();
+            user = result.user || null;
+            if (user) saveAuthUser(user);
+        } else {
+            clearAuthUser();
+        }
+    } catch {
+        user = getAuthUser();
+    }
+
     if (user) {
         if (user.role === "admin") {
             window.location.href = "/admin";
@@ -365,7 +399,13 @@ function closeLogin() {
     document.getElementById("login-backdrop")?.classList.remove("active");
     document.body.classList.remove("no-scroll");
 }
-document.getElementById("open-login")?.addEventListener("click", openLogin);
+document.addEventListener("click", event => {
+    const trigger = event.target.closest(".login-trigger");
+    if (!trigger) return;
+    event.preventDefault();
+    openLogin();
+});
+window.ODCorrectOpenLogin = openLogin;
 document.getElementById("login-close")?.addEventListener("click", closeLogin);
 document.getElementById("login-backdrop")?.addEventListener("click", closeLogin);
 document.addEventListener("keydown", e => {
@@ -500,6 +540,7 @@ document.getElementById("pw-toggle")?.addEventListener("click", () => {
             ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`
             : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
     }
+    document.getElementById("pw-toggle")?.setAttribute("aria-label", pwVisible ? "Hide password" : "Show password");
     showBubble(pwVisible ? "I can see it now 👀" : "Back to not looking 🙈");
 });
 
