@@ -185,14 +185,21 @@ function migrateDatabase() {
 }
 
 function seedAdminUser() {
-    const email = "admin@mrineh.in";
+    const email = String(process.env.ADMIN_EMAIL || "").trim().toLowerCase();
+    const password = String(process.env.ADMIN_PASSWORD || "");
+
+    if (!email || !password) {
+        console.warn("Admin account not seeded. Set ADMIN_EMAIL and ADMIN_PASSWORD to create one.");
+        return;
+    }
+
     const existing = db.prepare("SELECT id FROM users WHERE email = ?").get(email);
 
     if (!existing) {
         db.prepare(`
             INSERT INTO users (name, email, password_hash, role, created_at)
             VALUES (?, ?, ?, ?, ?)
-        `).run("Admin", email, hashPassword("password123"), "admin", Date.now());
+        `).run("Admin", email, hashPassword(password), "admin", Date.now());
     }
 }
 
