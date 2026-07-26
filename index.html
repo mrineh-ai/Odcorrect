@@ -6,6 +6,7 @@
     <title>ODCORRECT | Engineering Apparel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="image" href="images/model.male.webp" type="image/webp">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -160,7 +161,7 @@
             <div class="bento-grid reveal">
                 <div class="tile big-tile win-effect">
                     <div class="tile-split left" onclick="filterCategory('men'); document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
-                        <div class="tile-bg-img" style="background-image:url('images/model.male.jpg')"></div>
+                        <div class="tile-bg-img tile-img-men"></div>
                         <div class="tile-inner">
                             <span class="tile-label">FOR HIM</span>
                             <span class="tile-arrow">↗</span>
@@ -168,7 +169,7 @@
                         <div class="tile-overlay-text">MEN'S</div>
                     </div>
                     <div class="tile-split right" onclick="filterCategory('women'); document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
-                        <div class="tile-bg-img" style="background-image:url('images/model.female.jpg')"></div>
+                        <div class="tile-bg-img tile-img-women"></div>
                         <div class="tile-inner">
                             <span class="tile-label">FOR HER</span>
                             <span class="tile-arrow">↗</span>
@@ -178,22 +179,22 @@
                 </div>
                 <div class="small-tiles-container">
                     <div class="tile small-tile win-effect" onclick="filterCategory('baby-boy'); document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
-                        <div class="tile-bg-img" style="background-image:url('images/baby.boy.jpg')"></div>
+                        <div class="tile-bg-img tile-img-baby-boy"></div>
                         <span class="tile-label">BABY BOY</span>
                         <span class="tile-arrow-sm">↗</span>
                     </div>
                     <div class="tile small-tile win-effect" onclick="filterCategory('baby-girl'); document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
-                        <div class="tile-bg-img" style="background-image:url('images/baby.girl.jpg')"></div>
+                        <div class="tile-bg-img tile-img-baby-girl"></div>
                         <span class="tile-label">BABY GIRL</span>
                         <span class="tile-arrow-sm">↗</span>
                     </div>
                     <div class="tile small-tile win-effect" onclick="filterCategory('her-footwear'); document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
-                        <div class="tile-bg-img" style="background-image:url('images/her.shoe.jpg')"></div>
+                        <div class="tile-bg-img tile-img-her-shoe"></div>
                         <span class="tile-label">HER FOOTWEAR</span>
                         <span class="tile-arrow-sm">↗</span>
                     </div>
                     <div class="tile small-tile win-effect" onclick="filterCategory('his-footwear'); document.getElementById('collection').scrollIntoView({behavior:'smooth'})">
-                        <div class="tile-bg-img" style="background-image:url('images/his.shoe.jpg')"></div>
+                        <div class="tile-bg-img tile-img-his-shoe"></div>
                         <span class="tile-label">HIS FOOTWEAR</span>
                         <span class="tile-arrow-sm">↗</span>
                     </div>

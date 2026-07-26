@@ -11,8 +11,12 @@
         backdrop.classList.toggle("active", open);
         toggle.setAttribute("aria-expanded", String(open));
         toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+        drawer.setAttribute("aria-hidden", String(!open));
+        drawer.toggleAttribute("inert", !open);
         document.body.classList.toggle("menu-open", open);
     }
+
+    setMenu(false);
 
     toggle.addEventListener("click", () => {
         setMenu(!nav.classList.contains("nav-open"));

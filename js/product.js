@@ -23,16 +23,16 @@ const ALL_PRODUCTS_FALLBACK = [
 
 const CAT_LABELS = { men:"M", women:"W", baby:"B", footwear:"F" };
 const PRODUCT_IMAGES = {
-    OC_MN_001:"images/model.male.jpg", OC_MN_002:"images/model.male.jpg",
-    OC_MN_003:"images/model.male.jpg", OC_MN_004:"images/model.male.jpg",
-    OC_WM_001:"images/model.female.jpg", OC_WM_002:"images/model.female.jpg",
-    OC_WM_003:"images/model.female.jpg", OC_WM_004:"images/model.female.jpg",
-    OC_BB_001:"images/baby.boy.jpg", OC_BG_001:"images/baby.girl.jpg",
-    OC_HF_001:"images/his.shoe.jpg", OC_HF_002:"images/her.shoe.jpg"
+    OC_MN_001:"images/model.male.webp", OC_MN_002:"images/model.male.webp",
+    OC_MN_003:"images/model.male.webp", OC_MN_004:"images/model.male.webp",
+    OC_WM_001:"images/model.female.webp", OC_WM_002:"images/model.female.webp",
+    OC_WM_003:"images/model.female.webp", OC_WM_004:"images/model.female.webp",
+    OC_BB_001:"images/baby.boy.webp", OC_BG_001:"images/baby.girl.webp",
+    OC_HF_001:"images/his.shoe.webp", OC_HF_002:"images/her.shoe.webp"
 };
 
 function productImage(item) {
-    return PRODUCT_IMAGES[item.id] || "images/model.male.jpg";
+    return PRODUCT_IMAGES[item.id] || "images/model.male.webp";
 }
 
 // ─── STATE ──────────────────────────────────────────
